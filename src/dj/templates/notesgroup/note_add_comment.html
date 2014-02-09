@@ -1,0 +1,45 @@
+{% load i18n %}
+{{ form.errors }}
+<form id="detail_note_{{ note }}" name="note" method="post" action="/{{ note }}/{{ action }}/"
+      enctype="multipart/form-data">
+  <div style="text-align:right">
+    {% ifequal action "new" %}
+    <button onclick="$('#new_note').remove()">{% trans "Cancel" %}</button>
+	<input type="submit" target="new_note" value="{% trans "Create" %}" />
+    {% else %}
+	<input type="submit" target="detail_list_container_{{ note }}" value="{% trans "Save" %}" />
+    {% endifequal %}
+  </div>
+
+  <b>{% trans "Duration" %}</b>{{ form.montant }}
+  {% if user.is_staff %}
+      {{ timer_form }}
+  {% endif %}
+
+  <b>{% trans "State" %}</b>{{ form.etat_note }}
+
+  &nbsp;
+  {{ form.demandeur_employe }}
+  <span id="switch_from_to" onclick="switchFromTo({{ note }})">&rsaquo;</span>
+  {{ form.responsable_employe }}
+
+  <br />
+
+  <b>{% trans "Add comment" %}</b>
+  <br />
+  <div class="box">
+    {{ form.description }}
+  </div>
+  <br/>
+  <div style="text-align:right">
+	<input type="submit" target="detail_list_container_{{ note }}" value="{% trans "Save" %}" />
+  </div>
+</form>
+<script>
+  $("button, input:submit, #switch_from_to").button();
+  selectTreeCellParent('{{ note.path }}');
+  NOW = '{% now "r" %}';
+  launchWysiwygNoQuote($("#id_{{ note }}-description"));
+  usersStr();
+  goAnchor("detail_note_{{ note }}");
+</script>

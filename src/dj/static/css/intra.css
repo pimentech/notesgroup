@@ -1,0 +1,285 @@
+/*
+** This CSS is Shamely stolen from Plone style sheet.
+** Copyright Alexander Limi, 2002 - http://limi.net
+**
+** */
+/*  */
+
+
+
+body { font: 80% Verdana, Helvetica, Arial, sans-serif; background: White; padding: 0; margin:4px; overflow:hidden; }
+
+
+html body #page { height:99%; }
+
+table { font-size: 100%; border-spacing: 0; }
+
+td { margin: 0; vertical-align: top;}
+
+a { text-decoration: none; color: #436976; background-color: transparent; }
+
+
+img { border: none; vertical-align: middle; }
+
+
+p { margin: 0.3em 0em 0.3em 0em; text-align: justify; line-height: 1.5em; }
+p a { text-decoration: underline; }
+p a:visited { color: Purple; background-color: transparent; }
+p a:active { color: Red; background-color: transparent; }
+p img { border: 0; margin: 0; }
+
+
+
+h1, h2, h3, h4, h5, h6 { clear: left; font: 100% Helvetica, Verdana, Arial, sans-serif; margin: 0; padding-top: 0.2em; }
+h1 { font-size: 160%; }
+h2 { font-size: 150%; }
+h3 { font-size: 140%; }
+h4 { font-size: 120%; }
+h5 { font-size: 100%; }
+h6 { font-size: 80%; }
+
+
+ul { line-height: 1.5em; list-style-type: square; margin: 0.5em 0 0 2em; padding:0; }
+ol { line-height: 1.5em; margin: 0.5em 0 0 2em; padding:0; }
+ul a, ol a { text-decoration: underline; }
+li { margin-bottom: 1em; }
+dl { }
+dt { font-weight: bold; }
+dt a { text-decoration: underline; }
+dd { line-height: 1.5em; margin-bottom: 1em; }
+d a { text-decoration: underline; }
+
+
+fieldset { border: 1px solid #8cacbb; margin: 2em 0em 1em 0em; padding: 1em 0em; }
+legend { background: White; padding: 0.5em; }
+
+form { border: none; margin: 0; }
+textarea { border: 1px solid #8cacbb; padding: 0.1em; width: 400; height: 80; }
+input, button { font: 100% Verdana, Helvetica, Arial, sans-serif; border: 1px solid #8cacbb; vertical-align: middle; margin-bottom: 1px; /* IE bug fix */ padding: 0.1em; }
+select { font: 100% Verdana, Helvetica, Arial, sans-serif; border: 1px solid #8cacbb; vertical-align: middle; }
+blockquote { font-family: Times, "Times New Roman", serif; font-style: italic; font-size: 120%; }
+code { font-size: 120%; background-color: #dee7ec; }
+pre { font-size: 120%; padding: 1em; border: 1px solid #8cacbb; background-color: #dee7ec; }
+
+.error {
+    /* Class for error indication in forms */
+    background: #FFCE7B;
+    border: 1px solid #FFA500;
+    padding: 1em;
+    margin: 0;
+    width: 68% !important;
+}
+
+.required {
+    /* Used in addition to class "label" on required elements */
+    background: url(required.gif) right no-repeat;
+}
+
+span.card {
+    background: #DEE7EC;
+    border-color: #8CACBB;
+    border-width: 1px;
+    border-style: solid;
+    float: left;
+    margin: 1em;
+    padding: 1em;
+    text-align: center;
+    width: 15%;
+}
+
+#content {  height: 100%; }
+
+
+
+input[type=button],input[type=submit],input[type=reset] { cursor: pointer; }
+input, button { background: #EAEAEA; color: Black; font-weight: normal; text-transform: none; }
+
+ul { padding-bottom: 0.5em; }
+
+/* Pimentech */
+div.note_globale {
+  margin: 2px 5% 2px 5%;
+  border: 1px solid;
+  border-color: #aaa #000 #000 #aaa;
+  background-color: #f7f8ff;
+  padding: 0 2% 1% 2%;
+}
+
+div.Note {
+  border: solid 1px #8cacbb;
+  padding : 10px;
+  background-color: #dee7ec;
+  margin : 0 3% 0 3%;
+}
+
+div.note_globale h2#note {
+  /*text-align: center;*/
+}
+
+table.Note {
+  width: 100%;
+}
+
+div.fond {
+  background-color: #eeeeee;
+  border: solid 1px black;
+  padding : 15px;
+  margin : 0 5% 0 5%;
+}
+
+div.description {
+  font-size: 100%;
+  padding: 1em;
+  border: 1px dashed black;
+  background-color: #fff;
+  margin: 2px 5% 2px 5%;
+  text-align: left;
+  font-weight: Normal;
+}
+
+table#fichiers td{
+  padding: 0 10px 0 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.recherche {
+  padding: 3px;
+  border-top: 1px solid #555;
+  border-bottom: 1px solid #555;
+  background-color: #f7f8ff;
+  text-align: center;
+  margin: 1% 0 2% 0;
+}
+
+
+img.tree {
+  float: left;
+  margin-left: 4px;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+div.tree {
+  margin-left: 22px;
+}
+
+
+div.note-new {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  background: green;
+  margin-left: 44px;
+}
+
+
+div.wysiwyg ul.panel li.quote { background:url("../img/commentaire.gif") repeat scroll 0 0 transparent; }
+
+
+#page { background-color:#FFF; padding:2px; background-position:right top; background-repeat:no-repeat; -moz-border-radius:0.6em; -webkit-border-radius:0.6em; border:3px solid #444; min-height:55em; height: auto; }
+
+#info { right:14px; overflow:hidden; position:absolute; top:8px; width:280px; }
+#menu { left:14px; overflow:hidden; position:absolute; top:8px; width:280px; }
+#ngtree { left:14px; overflow:auto; position:absolute; top:55px; width:280px; }
+
+.content { left:305px; right:14px; position:absolute; top:8px;}
+#societes { display:none; overflow:auto; }
+#utilisateurs { display:none; overflow:auto; }
+
+.editable { cursor:pointer; background: #EAEAEA; border: 1px solid #8CACBB; min-height:5em; }
+
+.note-list { -moz-border-radius:0.6em; -webkit-border-radius:0.6em; background-color:#FFF; border-color:#CCC; border-style:solid; border-width:1px;margin:0pt; padding:2px;float:left; width:99%; }
+
+.top-list { background-color:#E0ECEC; border:3px solid #CCB; -moz-border-radius:0.6em; -webkit-border-radius:0.6em; }
+
+
+.rounded { -moz-border-radius:0.6em; -webkit-border-radius:0.6em; background-color:#FFF; border-color:#CCC; border-style:solid; border-width:1px;margin:0pt 1pt 0pt 0pt; padding:2px; display:inline; white-space:nowrap; }
+.grey { color:#AAA; display:inline; white-space:nowrap; }
+#texte { background-color:#F5F8FC; border:1px solid #6699CC; color:#000000; line-height:150%; margin:0pt 3% 2em 21%; padding:0pt 2% 3em; }
+
+#search { position:relative; padding:1px 5px 4px 5px; -moz-border-radius:0.6em; -webkit-border-radius:0.6em; background-color:#EEEEEE; border:1px solid #DDDDDD }
+#search label { background-color:#DDDDDD; line-height:3em; padding:5px 5px 7px 5px; margin-right:1em; white-space:nowrap; -moz-border-radius:7px; -webkit-border-radius:7px; }
+
+#label_group { background-color:#DDDDDD; line-height:3em; padding:5px 5px 7px 5px; margin-right:1em; white-space:nowrap; -moz-border-radius:7px; -webkit-border-radius:7px; text-align:nowrap}
+#label_group label { margin-right:0px; padding:0px; }
+
+#search select { vertical-align:middle; max-width:100px; background-color:#DDDDDD;}
+#search input { vertical-align:middle; background-color:#DDDDDD;}
+/*input[type=submit], button { font-size: 100% ! important; margin-bottom: 1px ! important; -moz-border-radius:7px;-webkit-border-radius:7px; -moz-box-shadow:1px 1px 4px #666666;-webkit-box-shadow:1px 1px 4px #666666; }*/
+
+#search ul, #search li { display:inline; margin-left:0px; margin-right:0px }
+
+#ngcontent { overflow: auto; position: relative; }
+#nglist {  position: relative; }
+#notepopup {  position: relative; z-index:3 }
+
+#employes { overflow: auto; position: relative; }
+
+
+.dropzone { position: absolute; width: 120px; height: 100px; background-color: #BBEF68; padding: 10px; }
+.dropactive { background-color: #fc9; }
+.drophover { background-color: #ffc; }
+.dropaccept, .group-user { cursor:move; }
+
+.messg { float: left; background-color: red; }
+
+.cell { -moz-border-radius:0.4em; -webkit-border-radius:0.4em; background-color:white;  }
+.selected { -moz-border-radius:0.4em;-webkit-border-radius:0.4em; background-color: #6699CC; }
+
+
+.transferer3 { border-top: 2px solid #6CAF00; border-bottom: 2px solid #6CAF00; border-left: 5px dashed #6CAF00; border-right: 5px dashed #6CAF00; }
+
+
+
+.treeview, .treeview ul { padding: 0; margin: 0; list-style: none; }
+.treeview li { margin: 0; padding: 4px 0 3px 20px; background: url(../img/puce_verte2.gif) 0 0 no-repeat; }
+.treeview .collapsable { background-image: url(../../../pimentech/img/small/go-home.png); }
+.treeview .expandable { background-image: url(../../../pimentech/img/small/go-home.png); }
+.treeview .last { background-image: url(../img/puce_verte2.gif); }
+.treeview .lastCollapsable { background-image: url(../../../pimentech/img/small/go-home.png); }
+.treeview .lastExpandable { background-image: url(../../../pimentech/img/small/go-home.png); }
+
+#id_date_start, #id_date_end { width:8em }
+
+.detail_list { cursor:pointer; width:100% }
+
+div.group { border:1px solid #CCCCCC; margin:1em 0 0; padding:0 1em; }
+div.group h6 { background:none repeat scroll 0 0 White; display:inline; left:0; padding:0.5em; position:relative; top:-0.8em; }
+
+
+/* Tooltip
+----------------------------------*/
+.ui-tooltip {
+	padding:8px;
+	width:125px;
+	position:absolute;
+	z-index:9999;
+	-o-box-shadow: 0 0 5px #aaa;
+	-moz-box-shadow: 0 0 5px #aaa;
+	-webkit-box-shadow: 0 0 5px #aaa;
+	box-shadow: 0 0 5px #aaa;
+}
+/* Fades and background-images don't work well together in IE6, drop the image */
+* html .ui-tooltip {
+	background-image: none;
+}
+body .ui-tooltip { border-width:2px; }
+
+ul.errorlist {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+.errorlist li {
+    font-size: 12px !important;
+    display: block;
+    padding: 4px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border: 1px solid red;
+    color: white;
+    background: red url(../img/admin/icon_alert.gif) 5px .3em no-repeat;
+}
+
+.errors { background: #ffc; }
+.errors input, .errors select { border: 1px solid red; }

@@ -1,0 +1,116 @@
+{% load i18n %}
+<span style="background-color:#DDD;width:100%">
+    {% call "module_note_detail_list" note %}
+</span>
+{{ form.errors }}
+<form id="detail_note_{{ note }}" name="note" method="post" action="/{{ note }}/{{ action }}/" enctype="multipart/form-data">
+    <div style="text-align:right">
+        {% ifequal action "new" %}
+            <button onclick="$('#new_note').remove()">{% trans "Cancel" %}</button>
+            <input type="submit" target="new_note" value="{% trans "Create" %}" />
+        {% else %}
+            <input type="submit" target="detail_list_container_{{ note }}" value="{% trans "Save" %}" />
+        {% endifequal %}
+    </div>
+    <table width="650" border="0" cellspacing="0" cellpadding="1" height="25" align="center">
+        <tr>
+            <td>
+                <table cellpadding="4">
+                    <tr>
+                        <td><b>{% trans "Name" %}</b></td>
+                        <td>{{ form.nom }}</td>
+                        <td><b>{% trans "Type" %}</b></td>
+                        <td>{{ form.type_note }}</td>
+                        <td><b>{% trans "State" %}</b></td>
+                        <td>{{ form.etat_note }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table cellpadding="4">
+                    <tr>
+                        <td><b>{% trans "Summary" %}</b></td>
+                        <td>{{ form.resume }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table cellpadding="4">
+                    <tr>
+                        <td><b>{% trans "From" %}</b></td>
+                        <td>{{ form.demandeur_employe }}</td>
+                        <td valign="top">
+                            <span id="switch_from_to" onclick="switchFromTo({{ note }})" alt="{% trans "Switch" %}">&lsaquo;&rsaquo;</span>
+                        </td>
+                        <td><b>{% trans "To" %}</b></td>
+                        <td>{{ form.responsable_employe }}</td>
+                    </tr>
+                    <tr>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table cellpadding="4">
+                    <tr>
+                        <td><b>{% trans "Priority" %}</b></td>
+                        <td>{{ form.priorite }}</td>
+                        <td><b>{% trans "Duration" %}</b></td>
+                        <td>
+                            {{ form.montant }}
+                            {% if user.is_staff %}
+                                {{ timer_form }}
+                            {% endif %}
+                        </td>
+                        <td><b>{% trans "Progression" %}</b></td>
+                        <td>{{ form.reussite }}</td>
+                    </tr>
+                </table>
+                <input type="hidden" name="date_debut.date:record" />
+                <input type="hidden" name="date_debut.time:record" />
+                <input type="hidden" name="date_fin.date:record" />
+                <input type="hidden" name="date_fin.time:record" />
+            </td>
+        </tr>
+    </table>
+
+    <b>{% trans "Description" %}</b>
+    <div class="box">
+        {{ form.description }}
+    </div>
+    <br/>
+
+    {% ifnotequal action "new" %}
+        <table>
+            {{ attachment_formset }}
+        </table>
+    {% endifnotequal %}
+
+    <div style="text-align:right">
+        {% ifequal action "new" %}
+            <button onclick="$('#new_note').remove()">{% trans "Cancel" %}</button>
+            <input type="submit" target="new_note" value="{% trans "Create" %}" />
+        {% else %}
+            <input type="submit"  value="Enregistrer" target="detail_list_container_{{ note }}"/>
+        {% endifequal %}
+    </div>
+</form>
+<div id="files_{{ note }}" class="note-list" src="#">
+</div>
+<script>
+ $("button, input:submit, #switch_from_to").button();
+ NOW = '{% now "r" %}';
+ {% ifequal action "new" %}
+ launchWysiwyg($("#new_note .wysiwyg"));
+ {% else %}
+ selectTreeCellParent('{{ note.path }}');
+ launchWysiwyg($("#id_{{ note }}-description"));
+ {% endifequal %}
+ usersStr();
+ goAnchor("detail_note_{{ note }}");
+</script>

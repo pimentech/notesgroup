@@ -1,0 +1,232 @@
+{% load i18n %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="shortcut icon" type="image/x-icon" href="{{ http_static }}/img/favicon.ico" />
+
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/ui-lightness/jquery-ui.css"  rel="stylesheet" />
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
+
+        <link href="{{ http_static }}/css/intra.css" rel="stylesheet" type="text/css" />
+        <script src="/pimentech/js/jquery.form.js"></script>
+        <script src="/pimentech/js/jquery.jframe.js"></script>
+        <script src="/pimentech/lib/tiny_mce/jquery.tinymce.js"></script>
+        <script src="/pimentech/js/jquery.treeview.pack.js"></script>
+        <script src="{{ http_static }}/js/jquery.dj.js"></script>
+        <script src="{{ http_static }}/js/app.js"></script>
+        <script src="{{ http_static }}/js/controllers.js"></script>
+        <script>
+         var http_static = '{{ http_static}}';
+         var utilisateur_authentifie = '{{ user.username }}';
+         var employe_dict = { {% for e in employe.workgroup %}{{ e.uid }}:{'name':'{{ e.prenom }} {{ e.nom }}','tel':'{{ e.tel }}'}{% if not forloop.last %},{% endif %}{% endfor %} };
+         var NOW = '{% now "r" %}';
+         $(document).ready(function() {
+           resizeNotesGroup();
+           $("#id_timer_date").datepicker();
+           $("#id_date_start").datepicker();
+           $("#id_date_end").datepicker();
+           {% if note_src %}
+           $("#detail_list_container_{{ note_src }}").fadeIn().loadJFrame("/{{ note_src }}/detail/");
+           {% endif %}
+           $("button, input:submit").button();
+           $('span.detail_list').live("click", function() { var uid = this.id; uid=uid.split('_')[2];showHideDetail(this, uid); });
+           $("#form_search").find("select,input").bind("change", highlightInput);
+           {% if not note_src %}
+           goTodo({{ user.id }});
+           {% endif %}
+           {% if user.is_staff %}
+           updateTimerDay();
+           {% endif %}
+         });
+        </script>
+        <style type="text/css">
+        </style>
+        <title>NotesGroup</title>
+    </head>
+    <body>
+        <div id="page">
+            <div id="menu" >
+                <a href="javascript:goTodo({{ authenticated_user.id }})" accesskey="1">
+                    <i class="fa fa-check-circle-o fa-4x" title="{% trans "What I have to do." %}"></i>
+                </a>
+                <a href="javascript:goAsked({{ authenticated_user.id }})" accesskey="2">
+                    <i class="fa fa-question fa-4x" title="{% trans "What I have asked (From:me, state:open)" %}"></i>
+                </a>
+                <a href="/workgroup/" jframe="activate" target="nglist" accesskey="3">
+                    <i class="fa fa-users fa-2x" title="{% trans "Workgroup" %}"></i>
+                </a>
+            </div>
+            <div id="ngtree" src="/tree/">
+                Tree
+            </div>
+
+            <div id="notes" class="content">
+                <div id="search" src="#">
+                    {% if user.is_staff %}
+                        <div id="progress_bar" onclick="goTouched({{ authenticated_user.id }})" style="height:5px;cursor:pointer"></div>
+                    {% endif %}
+
+                    <form name="form_search" id="form_search" action="jframe_list"
+                          method="post" onsubmit="return showNotes()">
+                        <label id="id_etat_note_label">
+                            <b>{% trans "State" %}</b>
+                            {{ form.etat_note }}
+                        </label>
+
+                        <label id="id_path_label" style="display:none">
+                            <b>{% trans "Scope" %}</b>
+                            {{ form.path }}
+                            <span id="html_chemin_txt"></span>
+                        </label>
+
+                        <label id="id_demandeur_label">
+                            <b>{% trans "From" %}</b>&nbsp;<select id="id_demandeur" name="demandeur">
+                                <option value="0"></option>
+                                {% for societe in employe.workgroup_by_societe %}
+                                    <option disabled>{{ societe.societe.nom }}</option>
+                                    {% for e in societe.employes %}
+                                        <option value="{{ e.uid }}">{{ e }}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                        </label>
+
+                        <label>
+                            <b>{% trans "To" %}</b>&nbsp;<select id="id_responsable" name="responsable">
+                                <option value="0"></option>
+                                {% for societe in employe.workgroup_by_societe %}
+                                    <option disabled>{{ societe.societe.nom }}</option>
+                                    {% for e in societe.employes %}
+                                        <option value="{{ e.uid }}">{{ e }}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                        </label>
+
+                        <label>
+                            <b>{% trans "Actor" %}</b>&nbsp;
+                            <select id="id_timer_actor" name="timer_actor">
+                                <option value="0"></option>
+                                {% for societe in employe.workgroup_by_societe %}
+                                    <option disabled>{{ societe.societe.nom }}</option>
+                                    {% for e in societe.employes %}
+                                        <option value="{{ e.uid }}">{{ e }}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                            {{ form.timer_date }}
+
+                        </label>
+
+
+
+                        <br />
+
+                        <label>
+                            <b>{{ form.sel_txt }}</b>
+                        </label>
+                        <label>
+                            {% trans "contains" %} <input type="text" id="id_resume" name="txt" size="40" />
+                        </label>
+
+                        <br />
+
+                        <span id="label_group">
+                            <b>{% trans "Modified between" %}</b> {{ form.date_start }}
+                            <b>{% trans "and" %}</b> {{ form.date_end }}
+                        </span>
+                        <input type="hidden" id="id_chemin" name="chemin" />
+                        <span id="label_group">
+                            <b>{% trans "Sort by" %}</b> {{ form.sort_on }} {{ form.sort_order }}
+                        </span>
+
+                        <label>
+                            {{ form.limit }}
+                        </label>
+                        <input type="hidden" name="page" id="id_page" value="1">
+
+                        <input style="position:right" type="submit" id="search_button" value="{% trans "Search" %}" target="nglist" />
+
+                    </form>
+
+                    {% for lang in LANGUAGES %}
+                        {% ifnotequal lang.0 LANGUAGE_CODE %}
+                            <a jframe="no" target="_top" href="#" onclick="$.post('/i18n/setlang/',{'next':'/','language':'{{ lang.0 }}'}, function() { document.location.href='/'; })">&gt;{% trans lang.1 %}</a>
+                        {% endifnotequal %}
+                    {% endfor %}
+                </div>
+
+                <div id="info">
+                    <div id="message" class="messg"></div>
+                </div>
+
+                <div id="ngcontent" style="height: 439px;">
+                    <div id="nglist" src="#">
+                        {% if note_src %}
+                            <div id="detail_list_container_{{ note_src }}" class="note-list" src="#">
+                            </div>
+                        {% else %}
+                            <h1>Welcome to NotesGroup 3.0b !</h1>
+
+                            <div class="group">
+                                <h6>What you have to know</h6>
+
+                                <h2>Shortcuts</h2>
+                                <table width="500">
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-check-circle-o fa-4x" title="{% trans "What I have to do." %}"></i>
+                                        </td>
+                                        <td>
+                                            What I have to do.  (destinataire (recipient) : me, état (state) : ouvert ou indéfini (open or undefined), étendue (scope): everywhere)
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-question fa-4x" title="{% trans "What I have asked (From:me, state:open)" %}"></i>
+                                        </td>
+                                        <td>
+                                            What I have asked (demandeur (applicant) : me, état (state) : ouvert ou indéfini (open or undefined), étendue : partout (everywhere))
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <h2>Commands</h2>
+                                <ul>
+                                    <li>Add a sub-note</li>
+                                    <li>Modify a note :
+                                        <ol>
+                                            <li>Display a list of notes with the shortcuts or from the tree</li>
+                                            <li>Click on a note</li>
+                                            <li>Modify the note (use <a class="quote"></a>  button to make a comment, switch to "résolu" (resolved) state when the task is considered finish</li>
+                                            <li>Click on "Enregistrer" (submit). All the workgroup of the tree path (<i class="fo fo-user"></i> link) will receive an email notification</li>
+                                        </ol>
+                                    </li>
+                                </ul>
+
+                                <h2>Advices</h2>
+                                <ul>
+                                    <li>Set up your email filters:</li>
+                                    <ul>
+                                        <li>Subject with "[NotesGroup]" to a special box</li>
+                                        <li>Subject with "[NotesGroup]" and your name with a special color</li>
+                                    </ul>
+                                </ul>
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div style="clear:both"></div>
+            <a id="pub" href="http://www.pimentech.fr" style="position:absolute">
+                <img  src="{{ http_static }}/img/logo-ng-100.png" align="right"/><br />
+            </a>
+        </div>
+    </body>
+</html>

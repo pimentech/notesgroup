@@ -1,0 +1,29 @@
+{% load i18n %}
+<span style="background-color:#DDD;width:100%">
+  {% call "module_note_detail_list" note %}
+</span>
+<div style="text-align:right">
+  <a class="button" target="_blank" href="/{{ note }}/detail_new_window/">{% trans "Print" %}</a>
+  <a class="button" target="detail_list_container_{{ note }}" href="/{{ note }}/edit/">{% trans "Modify" %}</a>
+  <a class="button" target="detail_note_comment_{{ note }}" href="/{{ note }}/add_comment/">{% trans "Comment" %}</a>
+</div>
+<div class="box">
+  {{ note.description|safe }}
+</div>
+
+{% if note.attachments %}
+<h3>{% trans "Attached files" %}</h3>
+<ul>
+{% for attachment in note.attachments %}
+<li><a href="{{ attachment.source }}" target="_blank">{{ attachment.source }}</a></li>
+{% endfor %}
+<ul>
+{% endif %}
+<div id="detail_note_comment_{{ note.pk }}"></div>
+
+<script type="text/javascript">
+  $("a.button").button();
+  selectTreeCellParent('{{ note.path }}');
+  usersStr();
+  $("#detail_list_container_{{ note }} .box a").attr("target","_blank");
+</script>

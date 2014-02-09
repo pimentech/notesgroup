@@ -1,0 +1,36 @@
+{% extends "notesgroup/base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+<style type="text/css">
+  body { overflow:auto; }
+</style>
+{% endblock %}
+{% block content %}
+<span style="background-color:#DDD;width:100%">
+  {% call "module_note_detail_list" note %}
+</span>
+<div class="box">
+  {{ note.description|safe }}
+</div>
+
+{% if note.attachments %}
+<h3>{% trans "Attached files" %}</h3>
+<ul>
+{% for attachment in note.attachments %}
+<li><a href="{{ attachment.source }}" target="_blank">{{ attachment.source }}</a></li>
+{% endfor %}
+<ul>
+{% endif %}
+<div id="detail_note_comment_{{ note.pk }}"></div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    //$("a.button").button();
+    //selectTreeCellParent('{{ note.path }}');
+    usersStr();
+    $("#detail_list_container_{{ note }} .box a").attr("target","_blank");
+    window.print();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,186 @@
+# sub-directories to install
+
+CRONUSER=$(shell whoami)
+
+NAMES = config admin src/dj src/shell
+
+SHELL=/bin/bash
+
+# helper applications :
+
+REPLACE = /usr/local/bin/replace.sh # from pimentech-scripts
+
+SRCROOTDIR=${HOME}/src/${APPLICATION}
+SRCDIR=${SRCROOTDIR}/src
+SRCDOCDIR=${SRCROOTDIR}/doc
+SRCSHELLDIR=${SRCDIR}/shell
+SRCINTERNETDIR=${SRCDIR}/internet
+SRCSQLDIR=${SRCDIR}/sql
+SRCXMLDIR=${SRCDIR}/xml
+SRCLSTDIR=${SRCDIR}/lst
+SRCLOG=${SRCROOTDIR}/${APPLICATION}.log
+
+# from pimentech-dbutils :
+
+DROPDB = drop-db.sh
+CREATEDB = create-db.sh
+EXECSQL = exec-sql.sh
+DROPUSER = drop-user.sh
+CREATEUSER = create-user.sh
+
+PGML2SQL = pgml2sql
+PGML2SQLFLAGS = -u -x -r '0' -s -g 83
+
+PGML2SSQL = pgml2ssql
+PGML2SSQLFLAGS = -u
+
+PGML2DOT = pgml2dot
+PGML2DOTFLAGS = -u
+
+PGML2SDOT = ${PGML2DOT}
+PGML2SDOTFLAGS = -u -s
+
+SIMPLIFYPGML = simplify-pgml
+SIMPLIFYPGMLFLAGS = -u 
+
+# some applications :
+
+LATEX = latex
+BIBTEX = bibtex
+PDFLATEX = pdflatex
+DVIPS = dvips
+EPSTOPDF = epstopdf
+PSTOPDF = ps2pdf
+
+DOT = dot # from graphviz
+DOTFLAGS = -Tps -Nfontsize=5 -Efontsize=5
+DIA = dia
+
+PYTHON = python
+PYTHONCOMPILE="import py_compile, sys; py_compile.compile(sys.argv[1])"
+PYTHONFLAGS = -c ${PYTHONCOMPILE}
+PYTHONOFLAGS = -O ${PYTHONFLAGS}
+
+# some rules
+
+SUFFIXES = .ps .pdf .tex .dvi .bib .bbl .eps .dia .gnumeric .tbz .tbunzipped .zip .ZIP .gz \
+		 .tgz .tgz_running .sql .xml .txt .TXT .tgz .tgunzipped .csv .clst .lst .pl .py .pyc .pyo .sh .mak .php .phps .php4 .html .htm .temp \
+		.dot .sdot .pgml .spgml .ssql .sphp .ok .dtd .dtml .po
+
+.SUFFIXES : ${SUFFIXES}
+
+.tex.dvi:
+	@echo "converting $< to $@"
+	@${LATEX} $<; latex $<
+
+.tex.pdf:
+	@echo "converting $< to $@"
+	@${PDFLATEX} $<; pdflatex $<
+
+.dvi.ps:
+	@echo "converting $< to $@"
+	@${DVIPS} $< -o
+
+.ps.pdf:
+	@echo "converting $< to $@"
+	@${PSTOPDF} $< $@
+
+.eps.pdf:
+	@echo "converting $< to $@"
+	@${EPSTOPDF} $< --outfile=$@
+
+.bib.bbl:
+	@echo "converting $< to $@"
+	@${BIBTEX} `basename $< .bib`
+	@touch `basename $< .bib`.tex
+
+.dot.eps:
+	@echo "converting $< to $@"
+	@${DOT} ${DOTFLAGS} $< > $@
+
+.sdot.eps:
+	@echo "converting $< to $@"
+	@${DOT} ${DOTFLAGS} $< > $@
+
+.dia.eps:
+	@echo "converting $< to $@"
+	@${DIA} --export=$@ $<
+
+.tbz.ok:
+	@echo "extracting $<"
+	@tar jxvf $<
+	@touch $@
+
+.tgz.ok:
+	@echo "extracting $<"
+	@tar zxvf $<
+	@touch $@
+
+.zip.ok:
+	@echo "extracting $<"
+	@unzip -o $<
+	@touch $@
+
+.gz.ok:
+	@echo "extracting $<"
+	@gunzip -c $< > `basename $< .gz`
+	@touch $@
+
+.mak.lst: 
+	@echo -e 'CRONUSER="${CRONUSER}"' > $@
+	@sed -e 's/^[	 ]*//g' -e 's/#.*$$//g' -e '/^[	 ]*$$/d' -e 's/:=/=/g' -e 's/=/="/g' -e 's/$$/"/g'  $< >> $@
+
+.lst.phps:
+	@echo -e "<?\n\n" > $@
+	@sed  -e "s/^/\\\$$config['/" -e "s/=/']=/" -e 's/$${\(\w*\)}/$$config[\1]/g' -e 's/"$$/";/' $<  >> $@
+	@echo -e "\n?>" >> $@;
+
+.lst.pl:
+	@sed -e 's/^/$$/g' -e 's/"$$/";/g' -e 's/@/\\@/g' $< > $@
+	@echo "1;" >> $@
+
+.lst.py:
+	@echo "import os" > $@
+	@echo -e "try: PATH=os.environ['PATH']\nexcept: PATH=''" >> $@
+	@echo -e "try: PYTHONPATH=os.environ['PYTHONPATH']\nexcept: PYTHONPATH=''" >> $@
+	@echo -e "try: PERLLIB=os.environ['PERLLIB']\nexcept: PERLLIB=''" >> $@
+	@sed -e 's/\$${\([A-Za-z0-9]\+\)}/" + \1 + "/g' -e 's/="" + /=/g' -e 's/ + ""$$//g' $< >> $@
+
+.lst.sh:
+	@sed 's/^/export /g' $< > $@
+
+.pgml.sql:
+	@echo "converting $< to $@"
+	@export PYTHONPATH=${PYTHONPATH};${PGML2SQL} ${PGML2SQLFLAGS} -f $< -o $@
+
+.pgml.ssql:
+	@echo "converting $< to $@"
+	@${PGML2SSQL} ${PGML2SSQLFLAGS} -f $< -o $@
+
+.pgml.py:
+	@echo "converting $< to $@"
+	@export PYTHONPATH=${PYTHONPATH};pgml2django  -f $< -r '0' -g 1.2 -o $@ -a admin.py
+
+.pgml.dot: 
+	@echo "converting $< to $@"
+	@${PGML2DOT} ${PGML2DOTFLAGS} -f $< -o $@.tmp
+	@grep -v '_isa_.\+-- ' $@.tmp | sed -e 's/^\([^[]\+\)_isa_\(.\+\)shape=diamond /\1 -- \2/g' -e 's/label=".\+_isa_.\+"/label="isa"/g' | grep -v edge | grep -v object | grep -v vertex | grep -v from | grep -v ^to[^w] | grep -v entity | grep -v modification | grep -v creation | grep -v list | resume_pgmldot | grep -v "> object" > $@
+	@rm -f $@.tmp
+
+.pgml.sdot: 
+	@echo "converting $< to $@"
+	@${PGML2SDOT} ${PGML2SDOTFLAGS} -f $< -o $@.tmp
+	@grep -v '_isa_.\+-- ' $@.tmp | sed -e 's/^\([^[]\+\)_isa_\(.\+\)shape=diamond /\1 -- \2/g' -e 's/label=".\+_isa_.\+"/label="isa"/g' | grep -v edge | grep -v object | grep -v vertex | grep -v from | grep -v ^to[^w]  | grep -v entity | grep -v modification | grep -v creation | grep -v list | resume_pgmldot | grep -v "> object" > $@
+
+
+.pgml.spgml:
+	@echo "converting $< to $@"
+	@${SIMPLIFYPGML} ${SIMPLIFYPGMLFLAGS} -f $< -o $@
+
+.py.pyc:
+	@echo "converting $< to $@"
+	@${PYTHON} ${PYTHONFLAGS} $<
+
+.py.pyo:
+	@echo "converting $< to $@"
+	@${PYTHON} ${PYTHONOFLAGS} $<

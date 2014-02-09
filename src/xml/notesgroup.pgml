@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='no' ?>
+<schema>
+   <table name="auth_user" admin="false" isbig="true" indjango="false">
+      <attribute type="int4" name="id" default="0" field="false"/>
+      <attribute type="text" name="username" length="200" str="true" constraints="unique"/>
+      <attribute type="text" name="first_name" length="200"/>
+      <attribute type="text" name="last_name" length="200"/>
+      <attribute type="email" name="email" length="200"/>
+      <attribute type="text" name="password" length="200"/>
+      <attribute type="boolean" name="is_staff"/>
+      <attribute type="boolean" name="is_superuser"/>
+      <attribute type="timestamp" name="last_login"/>
+      <attribute type="timestamp" name="date_joined"/>
+   </table>
+
+
+   <table name="object">
+      <attribute name="nom" type="text" display="true"/>
+      <attribute name="datecrea" type="timestamp" default="now()"/>
+      <attribute name="datemodif" type="timestamp" default="now()"/>
+      <attribute name="codecrea" type="text"/>
+      <attribute name="codemodif" type="text"/>
+      <attribute name="authcrea" type="int4"/>
+      <attribute name="authmodif" type="int4"/>
+      <attribute name="statut" type="int4" default="0"/>
+   </table>
+
+   <table name="type" isa="object"/>
+
+   <table name="userid" isa="object">
+      <attribute name="login" type="text" constraint="unique"/>
+      <attribute name="pwd" type="text"/>
+   </table>
+
+   <table name="personne" isa="object">
+      <attribute name="euid" type="text"/>
+      <attribute type="text" name="adresse1"/>
+      <attribute type="text" name="adresse2"/>
+      <attribute name="cp" type="text"/>
+      <attribute name="ville" type="text"/>
+      <attribute name="pays" type="text"/>
+      <attribute name="tel" type="text"/>
+      <attribute name="tel2" type="text"/>
+      <attribute name="fax" type="text"/>
+      <attribute name="web" type="text"/>
+      <attribute name="email" type="text"/>
+      <attribute name="commentaire" type="text"/>
+   </table>
+
+
+
+   <table name="societe" isa="personne">
+      <attribute name="siret" type="text"/>
+      <attribute name="siren" type="text"/>
+      <attribute name="ue_tva" type="text"/>
+      <attribute name="logo" type="text"/>
+      <attribute name="raison" type="text"/>
+   </table>
+
+   <table name="personne_physique" isa="personne">
+      <attribute type="text" name="prenom" display="true"/>
+      <attribute type="date" name="naissance"/>
+      <attribute type="int4" name="civilite"/>
+      <attribute type="int4" name="administrateur" default="0"/>
+      <attribute type="text" name="key"/>
+   </table>
+
+   <table name="employe" isa="personne_physique"/>
+
+   <relation name="user">
+      <participation type="0,1,1" table="employe"/>
+      <participation type="0,n,0" table="auth_user"/>
+   </relation>
+
+
+   <table name="type_employe" isa="object" />
+
+   <relation name="employe_type">
+      <participation type="0,1,1" table="employe"/>
+      <participation type="0,n,0" table="type_employe"/>
+   </relation>
+
+
+   <relation name="identifie_par">
+      <participation type="0,1,0" table="employe"/>
+      <participation type="1,1,1" table="userid"/>
+   </relation>
+
+   <relation name="societe_employe">
+      <participation type="0,1,1" table="employe"/>
+      <participation type="0,n,0" table="societe"/>
+   </relation>
+
+   <table name="note" isa="object">
+      <attribute name="datemodif" index="true"/>
+      <attribute name="path" type="array"/>
+      <attribute name="montant" type="float8"/>
+      <attribute name="reussite" type="int4"/>
+      <attribute name="resume" type="text"/>
+      <attribute name="description" type="text"/>
+      <attribute name="date_debut" type="timestamp"/>
+      <attribute name="date_fin" type="timestamp"/>
+      <attribute name="pre_alarme" type="timestamp"/>
+      <attribute name="post_alarme" type="timestamp"/>
+      <attribute name="priorite" type="int4"/>
+      <attribute name="send_pre_alarme" type="boolean" default="false"/>
+      <attribute name="send_post_alarme" type="boolean" default="false"/>
+   </table>
+
+   <table name="etat_note" isa="type"/>
+   <table name="type_note" isa="type"/>
+
+   <!--boucle-->
+   <relation name="note_note">
+      <participation type="0,1,1" table="note"/>
+      <participation type="0,n,0" table="object"/>
+   </relation>
+
+   <relation name="note_etat">
+      <participation type="0,1,1" table="note"/>
+      <participation type="0,n,0" table="etat_note"/>
+   </relation>
+
+   <relation name="note_type">
+      <participation type="0,1,1" table="note"/>
+      <participation type="0,n,0" table="type_note"/>
+   </relation>
+
+   <relation name="responsable">
+      <participation type="0,1,1" table="note"/>
+      <participation type="0,n,0" table="employe"/>
+   </relation>
+
+   <relation name="demandeur">
+      <participation type="0,1,1" table="note"/>
+      <participation type="0,n,0" table="employe"/>
+   </relation>
+
+   <table name="type_role" isa="type"/>
+
+   <relation name="droits">
+      <participation type="0,n,0" table="note"/>
+      <participation type="0,n,0" table="type_role"/>
+      <participation type="0,n,0" table="employe"/>
+   </relation>
+
+   <table name="action" isa="note"/>
+
+   <relation name="auteur">
+      <participation type="0,1,1" table="note"/>
+      <participation type="0,n,0" table="employe"/>
+   </relation>
+
+   <relation name="timer" isa="object">
+      <participation type="0,n,0" table="note"/>
+      <participation type="0,n,0" table="employe"/>
+      <attribute name="effective_date" type="date" default="now()"/>
+      <attribute type="float8" name="duration" default="0"/>
+      <multi-index names="effective_date, ref_employe, ref_note" constraints="unique" />
+   </relation>
+
+
+</schema>

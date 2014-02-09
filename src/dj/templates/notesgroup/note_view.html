@@ -1,0 +1,37 @@
+{% load i18n %}
+<h2>Notification NotesGroup</h2>
+<p>
+  {% trans "Action from" %} {{ last_note.authmodif }} {% trans "in" %} {{ last_note.parent.nom }}
+</p>
+<h1><a href="{{ http_root }}/?note_src={{ note_src }}">{{ note.nom }} : {{ note.resume }}</a></h1>
+<table>
+  <tr>
+    <th>{% trans "From" %}</th>
+    <td>{{ note.demandeur_employe }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "To" %}</th>
+    <td>{{ note.responsable_employe }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "Type" %}</th>
+    <td>{{ note.type_note }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "State" %}</th>
+    <td>{{ note.etat_note }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "Duration" %}</th>
+    <td>{{ note.montant }} h</td>
+  </tr>
+  {% if last_note.priorite %}
+  <tr>
+    <th>{% trans "Priority" %}</th>
+    <td>{{ note.priorite }}</td>
+  </tr>
+  {% endif %}
+</table>
+<div class="box">
+  {{ note.description|safe }}
+</div>

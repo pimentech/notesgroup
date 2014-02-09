@@ -1,0 +1,18 @@
+<script type="text/javascript">
+var users = '';
+{% if authenticated_user.is_superuser %}
+var html_del = '<iclass="users-droppable fa fa-user"></i>';
+{% else %}
+var html_del = null;
+{% endif %}
+{% for id in note.local_workgroup_ids %}
+{% ifnotequal id 0 %}
+users += '<span title="' +  employe_dict[{{ id }}]['tel'] + '">' + employe_dict[{{ id }}]['name'] + '</span>';
+if (html_del) {
+users += '<a href="{{ path }}?action=del&user={{ id }}" onclick="return confirm(\'Ok to remove this user from this path ?\');">'+html_del+'</a>';
+}
+users += '<br />';
+{% endifnotequal %}
+{% endfor %}
+$("#note-users-list-{{ note.uid }}").html(users);
+</script>

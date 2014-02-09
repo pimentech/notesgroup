@@ -1,0 +1,40 @@
+{% load i18n %}
+<div id="tree_parent_notesgroup">
+    {% for n in notes %}
+        <div id="tree_parent_{{ n.uid }}" class="note-tree" uid="{{ n.uid }}">
+            <table>
+                <tr >
+                    <td width="14px">
+                        {% if n.has_subtree %}
+                            <a href="javascript:loadHideSubTree({{ n.uid }})">
+                                <i id="img_{{ n.uid }}" class="fa fa-plus-square-o"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td id="cell_{{ n.uid }}" class="cell" uid="{{ n.uid }}">
+                        <a class="users-droppable" uid="{{ n.uid }}" href="javascript:loadHideSubTree({{ n.uid }});goSearch('{{ n.uid }}')" id="id_tree_{{ n.uid }}" name="tree_{{ n.uid }}"><li id="img_note_{{ n.uid }}" class="img-note fa fa-{{ n.icon }}"></li>{% ifequal n.uid 0 %}NotesGroup{% else %}{{ n.nom }}{% endifequal %}</a>&nbsp;
+                        {% ifnotequal n.uid 0 %}
+                            &nbsp;
+                            <a href="/{{ n.uid }}/users/" jframe="activate" toggle="off" target="note-users-list-{{ n.uid }}" {% if not n.has_users %}style="display:none"{% endif %}>
+                                <li class="users-droppable fa fa-user" uid="{{ n.uid }}"></li>
+                            </a>
+                            <div id="note-users-list-{{ n.uid }}"></div>
+                        {% endifnotequal %}
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div id="note_{{ n.uid }}"></div>
+                        <div id="tree_{{ n.uid }}" src="#"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    {% endfor %}
+</div>
+<!-- <dtml-if "_.SecurityCheckPermission('Administrateur', this())"> -->
+<script type="text/javascript">
+ setDroppableNotes('tree_parent_{{ note.uid }}');
+</script>
+<!-- </dtml-if> -->

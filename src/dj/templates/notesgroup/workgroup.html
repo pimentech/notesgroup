@@ -1,0 +1,36 @@
+{% load i18n %}
+<h1>Workgroup</h1>
+{% if authenticated_user.is_superuser %}
+<a href="/group/new/" target="new_group" toggle="off">{% trans "Add group" %}</a>
+{% endif %}
+<div id="new_group"></div>
+{% for societe in employe.workgroup_by_societe %}
+<h2>
+  <a href="/group/{{ societe.societe.uid }}/edit/" target="edit_{{ societe.societe.uid }}" toggle="off">
+    {{ societe.societe.nom }}
+  </a>
+</h2>
+<div id="edit_{{ societe.societe.uid }}"></div>
+<a href="/user/{{ societe.societe.uid }}/new/" target="new_user_{{ societe.societe.uid }}" toggle="off">{% trans "Add member" %}</a>
+
+<div id="new_user_{{ societe.societe.uid }}"></div>
+
+
+<ul>
+  {% for e in societe.employes %}
+  <li>
+    <a href="/user/{{ e.uid }}/edit/" target="edit_{{ e.uid }}" toggle="off">{{ e }}</a>
+    {{ e.tel }} {{ e.email }}
+    {% if not e.user.is_active %}
+    ({% trans "inactive" %})
+    {% else %}
+        <i uid="{{ e.uid }}" class="group-user fa fa-user" alt="add user somewhere in the tree"></i>
+    {% endif %}
+    <div id="edit_{{ e.uid }}"></div>
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+<script type="text/javascript">
+  $("#nglist").find("img.group-user").draggable({revert: true, fx: 300, ghosting: true, opacity: 0.4});
+</script>

@@ -1,0 +1,71 @@
+{% load i18n %}
+<div id="top-list-id" class="top-list" >
+    {% with form.cleaned_data as clean %}
+        {% if parent_note and parent_note.pk and parent_note.description|striptags %}
+            {{ parent_note.description|safe }}
+        {% endif %}
+
+        {% ifequal clean.path "ici" %}
+            <button onclick="newNote({{ parent_note.pk }})">{% trans "Add note" %}</button>
+            {% trans "in" %} <span id="human_path_{{ parent_note.pk }}"></span>
+            <script type="text/javascript">
+             $("#human_path_{{ parent_note.pk }}").html(humanPathFromTree({{ parent_note.pk }}));
+             $("button, input:submit").button();
+            </script>
+        {% else %}
+            {% trans "Scope : everywhere" %}
+        {% endifequal %}
+
+        {% if clean.demandeur %}
+            {% trans "From" %} : <user>{{ clean.demandeur }}</user>
+        {% endif %}
+
+        {% if clean.responsable %}
+            {% trans "To" %} : <user>{{ clean.responsable }}</user>
+        {% endif %}
+    {% endwith %}
+
+</div>
+{{ form.errors }}
+
+{% if notes.object_list %}
+    <div id="pagination-id" class="pagination">
+        <span class="step-links">
+            {% if notes.has_previous %}
+                <a href="javascript:goPage({{ notes.previous_page_number }})">
+                    {% trans "previous notes" %}
+                </a>
+            {% endif %}
+
+            <span class="current">
+                {{ notes.paginator.count }} {% trans "results" %},
+                {% trans "page" %}
+                {{ notes.number }}/{{ notes.paginator.num_pages }}.
+                {{ duration|floatformat:2 }}h
+                {{ duration_in_days|floatformat:2 }}d
+                {% if timer_duration %}
+                    <span class="ui-widget-header">{{ timer_date }} : {{ timer_duration }} {% trans "hours" %}  </span>
+                {% endif %}
+            </span>
+
+            {% if notes.has_next %}
+                <a href="javascript:goPage({{ notes.next_page_number }})">{% trans "next notes" %}</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <div id="notes-list-id">
+        {% for note in notes.object_list %}
+            <div id="detail_list_container_{{ note.uid }}"
+                 class="note-list" src="#">
+                {% call "module_note_detail_list" note %}
+            </div>
+        {% endfor %}
+        {{ note_name }}
+    </div>
+    <br />
+
+{% else %}
+    <div id="no-result-id">{% trans "No result" %}</div>
+    <div id="notes-list-id"/>
+{% endif %}

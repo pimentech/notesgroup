@@ -1,0 +1,95 @@
+{% load i18n %}
+<span id="detail_list_{{ note }}" class="detail_list">
+  <table  border="0" cellspacing="5" cellpadding="0" width="100%">
+	<tr>
+      <td rowspan="3" width="30" style="vertical-align:middle">
+        <li
+             id="img_drop_{{ note }}"
+             uid="{{ note }}"
+             class="dropaccept fa fa-{{ note.icon }} fa-2x"
+             title="{% trans "Move note" %}"
+             border="0"
+             ></li>
+      </td>
+      <td colspan="4" style="font-weight:bold;background:#dee7ec;" >
+		{{ note.nom }}
+		<span>
+          {% if note.etat_note_id %}({{ note.get_etat_note }}){% endif %}
+          {% if note.priorite %}
+              {% trans "Priority" %}: {{ note.priorite }}
+          {% endif %}
+          {% if user.is_staff and note.timer %}
+              <span class="ui-widget-header">{{ note.timer.duration }}h</span>
+          {% endif %}
+          {% if note.montant %}{{ note.montant }}h{% endif %}
+        </span>
+      </td>
+
+      <td style="background:#EAEAEA">
+		<b>{% if note.resume %}{{ note.resume }}{% else %}&nbsp;{% endif %}</b>
+      </td>
+	</tr>
+
+	<tr>
+      <td nowrap width="225">
+        {% if note.demandeur_employe_id or note.responsable_employe_id %}
+		{% if note.demandeur_employe_id %}<user>{{ note.demandeur_employe_id }}</user>{% endif %} &gt;
+        {% if note.responsable_employe_id %}<user>{{ note.responsable_employe_id }}</user>{% endif %}
+        {% else %}
+        &nbsp;
+        {% endif %}
+      </td>
+
+      <td nowrap width="123">
+        {{ note.datecrea|timesince }}
+      </td>
+
+      <td nowrap width="123">
+        {{ note.datemodif|timesince }}
+      </td>
+
+      <td colspan="2">
+        <span id="human_path_{{ note }}" class="grey">{% if note.human_path %}{{ note.human_path }}/{% endif %}</span><span style="color:#AAA">{{ note.nom }}</span>
+      </td>
+	</tr>
+    <tr>
+      <td colspan="5">&nbsp;</td>
+    </tr>
+  </table>
+</span>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+  {% if done_message %}
+  doneMessage();
+  {% endif %}
+
+  {% if new %}
+  $('#new_note').attr('id', 'detail_list_container_{{ note }}').detach().prependTo("#notes-list-id");
+  $('#no-result-id').remove();
+  {% endif %}
+  {% if not note.human_path %}
+  $("#detail_list_{{ note }} #human_path_{{ note }}").html(humanPathFromTree({{ note.parent_id }}));
+  {% endif %}
+{% comment %}
+var clone_with_tooltip =function() {
+  var clone = $(this).parent().clone();
+  clone.append("<b>déplacer</b>");
+return clone;
+}
+{% endcomment %}
+  $('#img_drop_{{ note }}').draggable({
+     snap: 'img.img-note',
+         snapMode: 'inner',
+         snapTolerance: 5,
+         revert: 'invalid',
+         helper: "clone",
+         appendTo: "body",
+         cursor: 'move'
+  });
+  usersStr();
+});
+</script>
+

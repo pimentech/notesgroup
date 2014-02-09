@@ -1,0 +1,36 @@
+* A FAIRE
+** TODO install origan
+*** minification js
+** TOCHECK cacher les nouveaux critères pour les non staff
+   dans le formulaire de recherche
+** TODO mise à jour du script de rapport journalier
+   avec avg timer (yesterday-lundi)
+   peut etre faut il l'envoyer dès le soir ?
+   oui car ça permettrait de rattraper
+** TODO pouvoir modifier le timer directement depuis la liste
+** TODO modifier le code pour prendre systématiquement en code la date de travail
+** TODO mettre à jour les locales
+** TODO migrer le repo sur github
+** TODO créer une branche angularjs/bootstrap
+* IDÉES
+** DONE timers sur les notes
+   uniquement insert ou delete, avec ref auteur,
+** TODO sélectionner un noeud de l'arbre ou tout le sous arbre
+   pour voir plus facilement et intuitivement les sous notes ouvertes
+** TODO ajouter des commentaire à côté d'une note, comme dans les traitements de texte
+   plus simple pour avoir une discussion sur un point.  Il y aurait
+   deux nouvaux types de notes : discussion et commentaire, chaque
+   commmentaire se met dans une discussion.
+
+   La discussion sert uniquement à :
+   - avoir un statut ouvert ou fermé
+   - positionner la discussion sur un point de la note, commme dans
+     les traitements de texte (à réfléchir).
+
+   Le commmentaire lui a juste un auteur, on est en append dans la
+   discussion et il ne peut à priori pas être modifié pour garder le
+   fil.
+* BASE
+** ALTER TABLE action NO INHERIT note : sinon on tape dans les deux tables
+** TODO passer des 'uid' aux 'id' (seds dans le dump)
+* NON

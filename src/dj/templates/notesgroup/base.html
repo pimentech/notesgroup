@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load url from future %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="shortcut icon" type="image/x-icon" href="{{ http_static }}/img/favicon.ico" />
+        {% if debug %}
+            <link href="{{ http_static }}/css/intra.css" rel="stylesheet" type="text/css" />
+            <link href="{{ http_static }}/css/jquery-ui.custom.css" rel="stylesheet" type="text/css" />
+            <script type="text/javascript" src="/pimentech/js/jquery.js"></script>
+            <script type="text/javascript" src="/pimentech/js/jquery-ui.js"> </script>
+            <script type="text/javascript" src="{{ http_static }}/js/jquery.tooltip.js"> </script>
+            <script type="text/javascript" src="/pimentech/js/jquery.form.js"></script>
+            <script type="text/javascript" src="/pimentech/js/jquery.jframe.js"></script>
+            <script type="text/javascript" src="{{http_static}}/pimentech/lib/tiny_mce/jquery.tinymce.js"></script>
+            <script type="text/javascript" src="/pimentech/js/jquery.treeview.pack.js"> </script>
+            <script type="text/javascript" src="{{ http_static }}/js/jquery.dj.js"> </script>
+        {% else %}
+            <link href="{{ http_static }}/css/notesgroup.min.css" rel="stylesheet" type="text/css" />
+            <script type="text/javascript" src="{{ http_static }}/js/lib.min.js"></script>
+        {% endif %}
+        <script type="text/javascript">
+         <!--
+         var http_static = '{{ http_static}}';
+         img_plus = new Image();
+         img_plus.src = '{{ http_static }}/img/list-add.png';
+         img_moins = new Image();
+         img_moins.src = '{{ http_static }}/img/list-remove.png';
+         var utilisateur_authentifie = '{{ user.username }}';
+         var employe_dict = { {% for e in employe.workgroup %}{{ e.uid }}:{'name':'{{ e.prenom }} {{ e.nom }}','tel':'{{ e.tel }}'}{% if not forloop.last %},{% endif %}{% endfor %} };
+         $(document).ready(function() {
+           resizeNotesGroup();
+           $("#id_date_start").datepicker();
+           $("#id_date_end").datepicker();
+           {% if note_src %}
+           $("#detail_list_container_{{ note_src }}").fadeIn().loadJFrame("/{{ note_src }}/detail/");
+           {% endif %}
+           $("button, input:submit").button();
+           $('span.detail_list').live("click", function() { var uid = this.id; uid=uid.split('_')[2];showHideDetail(this, uid); });
+           $("#form_search").find("select,input").bind("change", highlightInput);
+         });
+         -->
+        </script>
+        <style type="text/css">
+        </style>
+        {% block extra_head %}
+        {% endblock %}
+        <title>NotesGroup</title>
+    </head>
+    <body>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
