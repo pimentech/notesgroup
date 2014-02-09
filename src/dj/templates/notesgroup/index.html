@@ -26,9 +26,7 @@
          var NOW = '{% now "r" %}';
          $(document).ready(function() {
            resizeNotesGroup();
-           $("#id_timer_date").datepicker();
-           $("#id_date_start").datepicker();
-           $("#id_date_end").datepicker();
+           $("#id_date_start,#id_timer_date,#id_date_end").datepicker();
            {% if note_src %}
            $("#detail_list_container_{{ note_src }}").fadeIn().loadJFrame("/{{ note_src }}/detail/");
            {% endif %}

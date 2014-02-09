@@ -239,7 +239,7 @@ div.wysiwyg ul.panel li.quote { background:url("../img/commentaire.gif") repeat 
 .treeview .lastCollapsable { background-image: url(../../../pimentech/img/small/go-home.png); }
 .treeview .lastExpandable { background-image: url(../../../pimentech/img/small/go-home.png); }
 
-#id_date_start, #id_date_end { width:8em }
+#id_date_start, #id_date_end, #id_timer_date { width:8em }
 
 .detail_list { cursor:pointer; width:100% }
 
