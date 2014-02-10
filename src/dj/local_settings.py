@@ -49,7 +49,7 @@ if DEVELOPMENT_ENVIRON:
 
     HTTP_ROOT = 'http://origan:8010'
     STATIC_DIR = os.getcwd() + '/static/'
-DEBUG = True
+    DEBUG = True
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
