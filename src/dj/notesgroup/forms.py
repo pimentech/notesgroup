@@ -212,7 +212,7 @@ class SearchForm(Form):
     responsable = IntegerField(required=False)
 
     timer_actor = IntegerField(required=False)
-    timer_date = DateField(required=False, initial=datetime.today())
+    timer_date = DateField(required=False)
 
     txt = CharField(required=False)
     sel_txt = CharField(widget=Select(choices=(
