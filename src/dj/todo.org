@@ -7,6 +7,7 @@
    avec avg timer (yesterday-lundi)
    peut etre faut il l'envoyer dès le soir ?
    oui car ça permettrait de rattraper
+** TODO Afficher l'id de la note
 ** TODO pouvoir modifier le timer directement depuis la liste
 ** TODO modifier le code pour prendre systématiquement en code la date de travail
 ** TODO mettre à jour les locales

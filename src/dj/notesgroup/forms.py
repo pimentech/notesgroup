@@ -6,7 +6,6 @@ from django.forms import ModelForm, ValidationError, CharField, RadioSelect, \
 from django.forms.widgets import RadioFieldRenderer
 from django.forms.models import inlineformset_factory
 from django.utils.safestring import mark_safe
-from django.conf import settings
 from models import Note, EtatNote, Employe, Societe, User, Attachment, Timer
 
 from django.contrib.admin.widgets import AdminFileWidget
@@ -212,7 +211,8 @@ class SearchForm(Form):
     responsable = IntegerField(required=False)
 
     timer_actor = IntegerField(required=False)
-    timer_date = DateField(required=False, initial=datetime.today())
+    timer_date = DateField(required=False, initial=datetime.today().strftime("%d/%m/%Y"),
+                           widget=TextInput(attrs={'autocomplete':"off"}))
 
     txt = CharField(required=False)
     sel_txt = CharField(widget=Select(choices=(
