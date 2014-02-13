@@ -212,7 +212,7 @@ class SearchForm(Form):
 
     timer_actor = IntegerField(required=False)
     timer_date = DateField(required=False, initial=datetime.today().strftime("%d/%m/%Y"),
-
+                           widget=TextInput(attrs={'autocomplete':"off"}))
     txt = CharField(required=False)
     sel_txt = CharField(widget=Select(choices=(
         ("resume", _("Summary")),
