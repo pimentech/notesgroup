@@ -18,7 +18,7 @@
           {% if note.priorite %}
               {% trans "Priority" %}: {{ note.priorite }}
           {% endif %}
-          {% if user.is_staff and note.timer %}
+          {% if note.timer.duration %}
               <span class="ui-widget-header">{{ note.timer.duration }}h</span>
           {% endif %}
           {% if note.montant %}{{ note.montant }}h{% endif %}
