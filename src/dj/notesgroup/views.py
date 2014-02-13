@@ -103,8 +103,11 @@ class IndexView(ActiveMemberRequiredView):
     def fill_context(self):
         data = self.request.POST or None
         self.note_src = self.request.GET.get('note_src')
-        self.form = forms.SearchForm(data,
-                                     initial={'timer_date':datetime.today()})
+        self.form = forms.SearchForm(
+            data,
+            initial={
+                'timer_date':datetime.today().strftime("%d/%m/%Y")
+            })
 
 
 class ActiveMemberRequiredJsonView(ActiveMemberRequiredView):
