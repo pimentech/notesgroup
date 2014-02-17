@@ -385,7 +385,7 @@ function noteAddUser(note_id, id) {
 }
 
 function setDroppableNotes(parent_id) {
-	$('#' + parent_id).find("img.img-note").droppable(
+	$('#' + parent_id).find(".img-note").droppable(
 		{
             accept : '.dropaccept',
 			activeClass: 'ui-state-active',
