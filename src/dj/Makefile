@@ -78,7 +78,7 @@ ipython: globals.py
 
 
 ifndef PORT
-	PORT=8010
+	PORT=9001
 endif
 BROWSER="Chrome"
 

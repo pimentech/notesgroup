@@ -1,3 +1,12 @@
+* BRANCHE ANGULAR
+1. API REST
+   /api/note/ list & crea
+   /api/note/<id>/ detail et edit
+   /api/note/id/move/
+   /api/tree/<id>/ pour list
+2. Page vierge avec bootstrap & Angular
+
+
 * A FAIRE
 ** TODO install origan
 *** minification js
