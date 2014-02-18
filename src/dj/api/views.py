@@ -7,7 +7,7 @@ from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from dj.notesgroup.model_serializers import NoteSerializer, NoteListSerializer
+from dj.notesgroup import model_serializers
 from dj.notesgroup.models import Note
 
 import re
@@ -21,6 +21,14 @@ from rest_framework.views import APIView
 class NGView(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
+
+    def get_note_with_perms(self, pk):
+        note = Note.objects.get(pk=pk)
+        if not self.request.user.get_profile().can_view(note):
+            raise PermissionDenied()
+        return note
+
+
 
 def print_request(request):
     if settings.DEBUG:
@@ -94,9 +102,28 @@ class BaseElementView(NGView, generics.RetrieveUpdateDestroyAPIView):
 
 
 
+class SubTree(BaseListView):
+    model = Note
+    serializer_class = model_serializers.TreeListSerializer
+
+
+    def pre_save(self, obj):
+        super(NoteList, self).pre_save(obj)
+
+    def get_queryset(self):
+        note = self.kwargs.get('pk')
+        if note is None:
+            return self.request.user.get_profile().root_notes()
+        note = self.get_note_with_perms(note)
+        return Note.objects.filter(statut=0, parent=note, nom__isnull=False,
+                                   type_note__in=(1, 2, 3)
+                               ).exclude(uid=0).exclude(etat_note=4).exclude(
+                                   etat_note=3).order_by('nom')
+
+
 class NoteList(BaseListView):
     model = Note
-    serializer_class = NoteListSerializer
+    serializer_class = model_serializers.NoteListSerializer
 
 
     def pre_save(self, obj):
@@ -110,12 +137,11 @@ class NoteList(BaseListView):
 
 class NoteElement(BaseElementView):
     model = Note
-    serializer_class = NoteSerializer
+    serializer_class = model_serializers.NoteSerializer
 
-
-    def get(self, request, *args, **kwargs):
-        note = super(BaseElementView, self).get(request, *args, **kwargs)
-        if not request.user.get_profile().can_view(note):
+    def get_queryset(self):
+        note = super(NoteElement, self).get_queryset()
+        if not self.request.user.get_profile().can_view(note):
             raise PermissionDenied()
         return note
 

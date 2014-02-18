@@ -11,11 +11,15 @@ class NGSerializer(serializers.ModelSerializer):
 
 
 
+class TreeListSerializer(NGSerializer):
+    class Meta:
+        model = models.Note
+        fields = ('uid', 'nom', 'path', 'type_note')
 
 class NoteListSerializer(NGSerializer):
     class Meta:
         model = models.Note
-        fields = ('uid', 'nom', 'path', 'statut', 'nom', 'resume',
+        fields = ('uid', 'nom', 'path', 'statut', 'resume',
                   'date_debut', 'date_fin', 'reussite',
                   'demandeur_employe', 'responsable_employe',
                   'montant', 'priorite', 'etat_note', 'type_note')
