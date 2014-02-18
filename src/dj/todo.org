@@ -42,5 +42,8 @@
    fil.
 * BASE
 ** ALTER TABLE action NO INHERIT note : sinon on tape dans les deux tables
+** employe = authenticated_user.get_profile()
+   ça ne sert à rien de se baser là dessus dans toute l'appli, surtout si on a les
+   mêmes uids. Le seul problème est qu'on a plein de méthodes dans models.Employe,
+   il faudrait pouvoir les mettre dans une sous-classe de auth.User
 ** TODO passer des 'uid' aux 'id' (seds dans le dump)
-* NON

@@ -10,6 +10,7 @@ commonpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     (r'', include('dj.notesgroup.urls')),
+    (r'^api/', include('dj.api.urls')),
 )
 
 if settings.DEVELOPMENT_ENVIRON:

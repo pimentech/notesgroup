@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
-from dj.notesgroup import models, model_serializers
-
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.db.transaction import commit_on_success
+from django.http import Http404
 
 from rest_framework import generics, status
 from rest_framework.response import Response
+
+from dj.notesgroup.model_serializers import NoteSerializer, NoteListSerializer
+from dj.notesgroup.models import Note
 
 import re
 import sys
 
 
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
+class NGView(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
 
 def print_request(request):
     if settings.DEBUG:
@@ -18,7 +28,7 @@ def print_request(request):
             request.QUERY_PARAMS.dict(), 'DATA:', request.DATA
 
 
-class BaseListView(generics.ListCreateAPIView, models.SSBase):
+class BaseListView(NGView, generics.ListCreateAPIView):
     paginate_by_param = 'count'
 
     def get(self, request, *args, **kwargs):
@@ -60,7 +70,7 @@ class BaseListView(generics.ListCreateAPIView, models.SSBase):
 
 
 
-class BaseElementView(generics.RetrieveUpdateDestroyAPIView, models.SSBase):
+class BaseElementView(NGView, generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         print_request(request)
@@ -84,27 +94,34 @@ class BaseElementView(generics.RetrieveUpdateDestroyAPIView, models.SSBase):
 
 
 
-class DemandeList(BaseListView):
-    model = models.Demande
-    serializer_class = model_serializers.DemandeListSerializer
+class NoteList(BaseListView):
+    model = Note
+    serializer_class = NoteListSerializer
 
 
     def pre_save(self, obj):
-        super(DemandeList, self).pre_save(obj)
+        super(NoteList, self).pre_save(obj)
 
     def get_queryset(self):
-        queryset = super(DemandeList, self).get_queryset().filter(
-            famille__statut__gte=0)
+        queryset = super(NoteList, self).get_queryset().filter(
+            statut=0)
         return queryset
 
 
-class DemandeElement(BaseElementView):
-    model = models.Demande
-    serializer_class = model_serializers.DemandeSerializer
+class NoteElement(BaseElementView):
+    model = Note
+    serializer_class = NoteSerializer
+
+
+    def get(self, request, *args, **kwargs):
+        note = super(BaseElementView, self).get(request, *args, **kwargs)
+        if not request.user.get_profile().can_view(note):
+            raise PermissionDenied()
+        return note
 
 
     def update(self, request, *args, **kwargs):
-        ret = super(DemandeElement, self).update(request, *args, **kwargs)
+        ret = super(NoteElement, self).update(request, *args, **kwargs)
         return ret
 
     def post_save(self, obj, created=False):

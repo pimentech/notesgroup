@@ -84,8 +84,9 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-	'dj.notesgroup',
     'django.contrib.admin',
+	'dj.notesgroup',
+	'dj.api',
 )
 
 

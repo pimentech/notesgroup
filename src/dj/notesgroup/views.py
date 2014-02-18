@@ -19,25 +19,6 @@ from datetime import datetime
 import forms
 import json
 
-from rest_framework import serializers
-
-
-class NoteSerializer(serializers.ModelSerializer):
-
-    def get_identity(self, data):
-        try:
-            return data.get('uid', None)
-        except AttributeError:
-            return None
-
-    class Meta:
-        model = Note
-        fields = ('uid', 'nom', 'path', 'statut', 'nom', 'resume',
-                  'date_debut', 'date_fin', 'reussite', 'description',
-                  'demandeur_employe', 'responsable_employe',
-                  'montant', 'priorite', 'etat_note', 'type_note')
-
-
 active_member_required = login_required = user_passes_test(
     lambda u: u.is_active, login_url='accounts/login/')
 register = template.Library()
@@ -71,14 +52,15 @@ class ActiveMemberRequiredView(BaseView):
         return super(ActiveMemberRequiredView, self).__call__(
             request, *args, **kwargs)
 
-    def root_notes_ids(self):
-        ids = set()
-        curs = connection.cursor()
-        curs.execute("select ref_note from droits where ref_employe=%s",
-                     (self.request.user.id,))
-        for id, in curs.fetchall():
-            ids.add(id)
-        return ids
+    # defined in models
+    # def root_notes_ids(self):
+    #     ids = set()
+    #     curs = connection.cursor()
+    #     curs.execute("select ref_note from droits where ref_employe=%s",
+    #                  (self.request.user.id,))
+    #     for id, in curs.fetchall():
+    #         ids.add(id)
+    #     return ids
 
     def module_note_detail_list(self, note):
         return self.inclusion_tag("notesgroup/module_note_detail_list.html",
