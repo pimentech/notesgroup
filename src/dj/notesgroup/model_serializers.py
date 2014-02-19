@@ -12,9 +12,21 @@ class NGSerializer(serializers.ModelSerializer):
 
 
 class TreeListSerializer(NGSerializer):
+    has_users = serializers.WritableField()
+    has_subtree = serializers.WritableField()
     class Meta:
         model = models.Note
         fields = ('uid', 'nom', 'path', 'type_note')
+
+    def to_native(self, obj):
+        ret = super(TreeListSerializer, self).to_native(obj)
+        ret['has_subtree'] = models.Note.objects.filter(
+            parent=obj,
+            etat_note__uid__lte=1,
+            type_note__uid__lte=3).exists()
+        ret['has_users'] = models.Droits.objects.filter(note=obj).exists()
+        return ret
+
 
 class NoteListSerializer(NGSerializer):
     class Meta:
