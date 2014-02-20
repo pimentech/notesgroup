@@ -27,6 +27,10 @@
    uniquement insert ou delete, avec ref auteur,
 ** TODO sélectionner un noeud de l'arbre ou tout le sous arbre
    pour voir plus facilement et intuitivement les sous notes ouvertes
+** TODO on passe beaucoup par les mails pour voir les mises à jour de notes
+   Il faudrait répondre au besoin depuis l'interface
+** TODO Pouvoir utiliser d'autres formats que le html dans le contenu
+   RST (mieux) ou MarkDown (plus répandu?)
 ** TODO ajouter des commentaire à côté d'une note, comme dans les traitements de texte
    plus simple pour avoir une discussion sur un point.  Il y aurait
    deux nouvaux types de notes : discussion et commentaire, chaque

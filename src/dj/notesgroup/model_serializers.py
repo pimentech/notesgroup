@@ -28,13 +28,39 @@ class TreeListSerializer(NGSerializer):
         return ret
 
 
+
+class TimerSerializer(NGSerializer):
+
+    class Meta:
+        model = models.Timer
+        fields = ('uid', 'duration')
+
 class NoteListSerializer(NGSerializer):
+    timer = serializers.WritableField()
+
     class Meta:
         model = models.Note
         fields = ('uid', 'nom', 'path', 'statut', 'resume',
                   'date_debut', 'date_fin', 'reussite',
                   'demandeur_employe', 'responsable_employe',
                   'montant', 'priorite', 'etat_note', 'type_note')
+
+    def to_native(self, obj):
+        ret = super(NoteListSerializer, self).to_native(obj)
+        try:
+            employe = self.context['request'].user.get_profile()
+            form = self.context['view'].form
+            date = form.cleaned_data.get('timer_date') or None
+            timer = models.Timer.objects.get(
+                note=obj,
+                employe=employe,
+                effective_date=date)
+        except models.Timer.DoesNotExist:
+            return ret
+        ret['timer'] = TimerSerializer(timer).data
+        return ret
+
+
 
 
 class NoteSerializer(NGSerializer):
