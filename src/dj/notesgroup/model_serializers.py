@@ -62,8 +62,8 @@ class NoteListSerializer(NGSerializer):
 
 
 
-
 class NoteSerializer(NGSerializer):
+
     class Meta:
         model = models.Note
         fields = ('uid', 'nom', 'path', 'statut', 'nom', 'resume',

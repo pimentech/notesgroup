@@ -6,13 +6,14 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from dj.notesgroup import model_serializers
-from dj.notesgroup.models import Note
+from dj.notesgroup.models import Note, Timer
 from dj.notesgroup import forms
 
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
+from datetime import datetime
 import re
 import sys
 
@@ -33,17 +34,19 @@ def print_request(request):
             request.QUERY_PARAMS.dict(), 'DATA:', request.DATA
 
 
-class BaseListView(NGView, generics.ListCreateAPIView):
+class BaseCreateView(NGView, generics.CreateAPIView):
+    @commit_on_success
+    def post(self, request, *args, **kwargs):
+        print_request(request)
+        return super(BaseListView, self).post(request, *args, **kwargs)
+
+
+class BaseListView(BaseCreateView, generics.ListCreateAPIView):
     paginate_by_param = 'count'
 
     def get(self, request, *args, **kwargs):
         print_request(request)
         return super(BaseListView, self).get(request, *args, **kwargs)
-
-    @commit_on_success
-    def post(self, request, *args, **kwargs):
-        print_request(request)
-        return super(BaseListView, self).post(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super(BaseListView, self).get_queryset()
@@ -189,3 +192,20 @@ class NoteElement(BaseElementView):
     def post_save(self, obj, created=False):
         # send mail
         pass
+
+
+class TimerCreate(BaseCreateView):
+    model = Timer
+    serializer_class = model_serializers.TimerSerializer
+
+    def pre_save(self, obj):
+        super(TimerCreate, self).pre_save(obj)
+        note = self.kwargs.get('pk')
+        obj.note = self.get_note_with_perms(note)
+        obj.employe = self.request.user.get_profile()
+        obj.effective_date = datetime.today()
+
+
+class TimerElement(BaseElementView):
+    model = Timer
+    serializer_class = model_serializers.TimerSerializer
