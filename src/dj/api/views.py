@@ -117,6 +117,38 @@ class SubTree(BaseListView):
             etat_note=3).order_by('nom')
 
 
+class Tree(BaseListView):
+    model = Note
+    serializer_class = model_serializers.TreeSerializer
+
+    def pre_save(self, obj):
+        super(NoteList, self).pre_save(obj)
+
+    def get_queryset(self):
+        curs = connection.cursor()
+        the_tree = []
+        stack = []
+        if self.request.user.is_superuser:
+            #curs.execute("select uid from note where statut=0 and ref_object=0")
+            ids.add(0)
+        else:
+            employe = self.request.user.get_profile()
+            current_tree = the_tree
+            last_parent = None
+            curs.execute("SELECT note.uid,note.ref_parent,note.path,note.nom"
+                         " FROM droits,note WHERE droits.ref_employe=%s"
+                         " AND droits.ref_note=note.uid AND note.statut=0"
+                         " ORDER BY note.path", (employe.pk,))
+            for uid, parent_uid,path, nom in curs.fetchall():
+                curs.execute("SELECT uid,ref_parent,path,nom from note where path like '/355/31274/%' and ref_type_note in (1,2,3) and ref_etat_note not in (3,4) and uid!=0 and nom is not null")
+                for uid, parent, path, nom in curs.fetchall():
+                    if last_parent is None:
+                        last_parent = parent
+
+
+
+
+
 class NoteList(BaseListView):
     model = Note
     serializer_class = model_serializers.NoteListSerializer
