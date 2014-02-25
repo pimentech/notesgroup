@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.db import connection
 from django.db.transaction import commit_on_success
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -117,33 +118,55 @@ class SubTree(BaseListView):
             etat_note=3).order_by('nom')
 
 
-class Tree(BaseListView):
-    model = Note
-    serializer_class = model_serializers.TreeSerializer
 
-    def pre_save(self, obj):
-        super(NoteList, self).pre_save(obj)
-
-    def get_queryset(self):
-        curs = connection.cursor()
-        the_tree = []
-        stack = []
-        if self.request.user.is_superuser:
-            #curs.execute("select uid from note where statut=0 and ref_object=0")
-            ids.add(0)
+def get_tree():
+    curs = connection.cursor()
+    # if self.request.user.is_superuser:
+    #     #curs.execute("select uid from note where statut=0 and ref_object=0")
+    #     ids.add(0)
+    # else:
+    #     employe = self.request.user.get_profile()
+    #     current_tree = the_tree
+    last_parent_uid = 0
+    last_children = []
+    last_node = { 'uid':0, 'nom':'Notesgroup', 'children':last_children }
+    last_path = '/'
+    stack = [ (last_path, last_node) ]
+    tree = [ last_node ]
+    curs.execute("SELECT uid,ref_object,path,nom from note where ref_type_note in (1,2,3) and ref_etat_note not in (3,4) and uid!=0 and nom is not null ORDER BY path")
+    for uid, parent_uid, path, nom in curs.fetchall():
+        node = {'uid':uid,'nom':nom}
+        if parent_uid == last_parent_uid:
+            print "append",path, "to", last_path
+            last_children.append(node)
+        elif path.startswith(last_path):
+            stack.append((last_path, last_children))
+            print path,":append",node, "to", last_node
+            last_children = [ node ]
+            last_node['children'] = last_children
+            last_parent_uid = parent_uid
+        elif last_path.startswith(path):
+            print "pop for", path,':'
+            while True:
+                spath, last_children = stack.pop()
+                print "popped", spath, last_children
+                if path.startswith(spath):
+                    break
+                last_children.append(node)
         else:
-            employe = self.request.user.get_profile()
-            current_tree = the_tree
-            last_parent = None
-            curs.execute("SELECT note.uid,note.ref_parent,note.path,note.nom"
-                         " FROM droits,note WHERE droits.ref_employe=%s"
-                         " AND droits.ref_note=note.uid AND note.statut=0"
-                         " ORDER BY note.path", (employe.pk,))
-            for uid, parent_uid,path, nom in curs.fetchall():
-                curs.execute("SELECT uid,ref_parent,path,nom from note where path like '/355/31274/%' and ref_type_note in (1,2,3) and ref_etat_note not in (3,4) and uid!=0 and nom is not null")
-                for uid, parent, path, nom in curs.fetchall():
-                    if last_parent is None:
-                        last_parent = parent
+            print "dead node : ", path
+        last_path = path
+        last_node = node
+    return tree
+
+    # curs.execute("SELECT note.uid,note.ref_parent,note.path,note.nom"
+    #              " FROM droits,note WHERE droits.ref_employe=%s"
+    #              " AND droits.ref_note=note.uid AND note.statut=0"
+    #              " ORDER BY note.path", (employe.pk,))
+    # for uid, parent_uid,path, nom in curs.fetchall():
+    #     for uid, parent, path, nom in curs.fetchall():
+    #         if last_parent is None:
+    #             last_parent = parent
 
 
 
