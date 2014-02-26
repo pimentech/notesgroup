@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
+from django import http
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db import connection
 from django.db.transaction import commit_on_success
+from django.utils import simplejson as json
+
 from rest_framework import generics, status
 from rest_framework.response import Response
-
-from dj.notesgroup import model_serializers
-from dj.notesgroup.models import Note, Timer
-from dj.notesgroup import forms
-
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+
+from dj.notesgroup import model_serializers
+from dj.notesgroup.models import Note, Timer, Droits
+from dj.notesgroup import forms
 
 from datetime import datetime
 import re
@@ -100,49 +102,11 @@ class BaseElementView(NGView, generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SubTree(BaseListView):
-    model = Note
-    serializer_class = model_serializers.TreeListSerializer
+class Tree(BaseElementView):
 
-    def pre_save(self, obj):
-        super(NoteList, self).pre_save(obj)
-
-    def get_queryset(self):
-        note = self.kwargs.get('pk')
-        if note is None:
-            return self.request.user.get_profile().root_notes()
-        note = self.get_note_with_perms(note)
-        return Note.objects.filter(statut=0, parent=note, nom__isnull=False,
-                                   type_note__in=(1, 2, 3)
-                                   ).exclude(uid=0).exclude(etat_note=4).exclude(
-            etat_note=3).order_by('nom')
-
-from django import http
-from django.utils import simplejson as json
-
-class JSONResponseMixin(object):
     def render_to_response(self, context):
-        "Returns a JSON response containing 'context' as payload"
-        return self.get_json_response(self.convert_context_to_json(context))
-
-    def get_json_response(self, content, **httpresponse_kwargs):
-        "Construct an `HttpResponse` object."
-        return http.HttpResponse(content,
-                                 content_type='application/json',
-                                 **httpresponse_kwargs)
-
-    def convert_context_to_json(self, context):
-        "Convert the context dictionary into a JSON object"
-        # Note: This is *EXTREMELY* naive; in reality, you'll need
-        # to do much more complex handling to ensure that arbitrary
-        # objects -- such as Django model instances or querysets
-        # -- can be serialized as JSON.
-        return json.dumps(context)
-
-from django.views.generic.detail import BaseDetailView
-
-class Tree(JSONResponseMixin, BaseDetailView):
-
+        return http.HttpResponse(json.dumps(context),
+                                 content_type='application/json')
     def get(self, request, *args, **kwargs):
         curs = connection.cursor()
         if request.user.is_superuser:
@@ -176,7 +140,10 @@ class Tree(JSONResponseMixin, BaseDetailView):
                         parent['children'].append(node)
                     else:
                         parent['children'] = [ node ]
-                node_dict[uid] = node
+                    node['has_users'] = Droits.objects.filter(
+                        note_id=uid).exists()
+                    node_dict[uid] = node
+
         return self.render_to_response(tree)
 
 
