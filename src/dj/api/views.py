@@ -109,6 +109,11 @@ class Tree(BaseElementView):
                                  content_type='application/json')
     def get(self, request, *args, **kwargs):
         curs = connection.cursor()
+
+        curs.execute("SELECT distinct ref_note from droits")
+        notes_with_users = set([ uid for uid, in curs.fetchall() ])
+
+
         if request.user.is_superuser:
             root_notes = ((0, 'Notesgroup', '/'),)
         else:
@@ -140,8 +145,7 @@ class Tree(BaseElementView):
                         parent['children'].append(node)
                     else:
                         parent['children'] = [ node ]
-                    node['has_users'] = Droits.objects.filter(
-                        note_id=uid).exists()
+                    node['has_users'] = uid in notes_with_users
                     node_dict[uid] = node
 
         return self.render_to_response(tree)
