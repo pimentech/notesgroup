@@ -1,0 +1,33 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NotesGroup</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{{ http_static }}/css/tree-control.css"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+    <script src="{{ http_static }}/js/ext/angular-tree-control.js"></script>
+    <script src="{{ http_static }}/js/app.js"></script>
+    <script src="{{ http_static }}/js/controllers.js"></script>
+
+  </head>
+  <body ng-app="myApp"
+        ng-controller="TopCtrl"
+        ng-init="initialize()">
+      <div class="row">
+          <div class="col-md-3">.col-md-4</div>
+          <div class="col-md-9">.col-md-4</div>
+      </div>
+      <div class="row">
+          <div class="col-md-3">.col-md-4</div>
+          <div class="col-md-9">.col-md-4</div>
+      </div>
+  </body>
+</html>
+
