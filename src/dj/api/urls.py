@@ -3,6 +3,7 @@ import views
 
 urlpatterns = patterns(
     '',
+    url(r'^tree/$', views.Tree.as_view()),
     url(r'^note/$', views.NoteList.as_view()),
     url(r'^note/(?P<pk>\d+)/$', views.NoteElement.as_view()),
     url(r'^note/(?P<pk>\d+)/timer/$', views.TimerCreate.as_view()),

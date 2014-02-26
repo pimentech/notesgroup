@@ -117,41 +117,67 @@ class SubTree(BaseListView):
                                    ).exclude(uid=0).exclude(etat_note=4).exclude(
             etat_note=3).order_by('nom')
 
+from django import http
+from django.utils import simplejson as json
 
+class JSONResponseMixin(object):
+    def render_to_response(self, context):
+        "Returns a JSON response containing 'context' as payload"
+        return self.get_json_response(self.convert_context_to_json(context))
 
-def get_tree():
-    curs = connection.cursor()
-    node_dict = {}
-    if self.request.user.is_superuser:
-        paths = ('/', )
-        last_node = { 'uid':0, 'nom':'Notesgroup', 'children':[] }
-        tree = [ last_node ]
-        node_dict = { 0: last_node }
-    else:
-        employe = self.request.user.get_profile()
-        curs.execute("SELECT note.uid,note.nom,note.path"
-                     " FROM droits,note WHERE droits.ref_employe=%s"
-                     " AND droits.ref_note=note.uid AND note.statut=0"
-                     " ORDER BY note.path", (employe.pk,))
-        paths = []
-        for uid,nom,path in curs.fetchall():
-            paths.append(path)
-            node = {'uid':uid, 'nom':nom}
-            node_dict[uid] = node
-            tree.append(node)
+    def get_json_response(self, content, **httpresponse_kwargs):
+        "Construct an `HttpResponse` object."
+        return http.HttpResponse(content,
+                                 content_type='application/json',
+                                 **httpresponse_kwargs)
 
-    for path in paths:
-        curs.execute("SELECT uid,ref_object,path,nom from note where path like %s and ref_type_note in (1,2,3) and ref_etat_note not in (3,4) and uid!=0 and nom is not null ORDER BY path", (path+'%',))
-        for uid, parent_uid, path, nom in curs.fetchall():
-            node = {'uid':uid,'nom':nom}
-            if parent_uid in node_dict:
-                parent = node_dict[parent_uid]
-                if 'children' in parent:
-                    parent['children'].append(node)
-                else:
-                    parent['children'] = [ node ]
-            node_dict[uid] = node
-    return tree
+    def convert_context_to_json(self, context):
+        "Convert the context dictionary into a JSON object"
+        # Note: This is *EXTREMELY* naive; in reality, you'll need
+        # to do much more complex handling to ensure that arbitrary
+        # objects -- such as Django model instances or querysets
+        # -- can be serialized as JSON.
+        return json.dumps(context)
+
+from django.views.generic.detail import BaseDetailView
+
+class Tree(JSONResponseMixin, BaseDetailView):
+
+    def get(self, request, *args, **kwargs):
+        curs = connection.cursor()
+        node_dict = {}
+        if request.user.is_superuser:
+            paths = ('/', )
+            last_node = { 'uid':0, 'nom':'Notesgroup', 'children':[] }
+            tree = [ last_node ]
+            node_dict = { 0: last_node }
+        else:
+            employe = request.user.get_profile()
+            curs.execute("SELECT note.uid,note.nom,note.path"
+                         " FROM droits,note WHERE droits.ref_employe=%s"
+                         " AND droits.ref_note=note.uid AND note.statut=0"
+                         " ORDER BY note.path", (employe.pk,))
+            paths = []
+            for uid,nom,path in curs.fetchall():
+                if paths and not path.startswith(paths[-1]):
+                    paths.append(path)
+                    node = {'uid':uid, 'nom':nom}
+                    node_dict[uid] = node
+                    tree.append(node)
+
+        for path in paths:
+            curs.execute("SELECT uid,ref_object,path,nom from note where path like %s and ref_type_note in (1,2,3) and ref_etat_note not in (3,4) and uid!=0 and nom is not null ORDER BY path", (path+'%',))
+            for uid, parent_uid, path, nom in curs.fetchall():
+                node = {'uid':uid,'nom':nom}
+                if parent_uid in node_dict:
+                    parent = node_dict[parent_uid]
+                    if 'children' in parent:
+                        parent['children'].append(node)
+                    else:
+                        parent['children'] = [ node ]
+                node_dict[uid] = node
+        return self.render_to_response(tree)
+
 
 
 
