@@ -1,7 +1,7 @@
 'use strict';
 /* global angular, $, app, DEBUG, USERNAME, USERID, CARTE */
 
-var modules = ['ngCookies'];
+var modules = ['ngCookies', 'treeControl'];
 
 var app = angular.module('myApp', modules);
 var ENTITIES = [];

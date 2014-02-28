@@ -106,7 +106,9 @@ function CommonCtrl($scope,top, $log, $filter, ModelUtils, ngTableParams) {
     top[$scope.name+'_reload'] = false;
     $scope.errors = {};
 
-    $scope.initialize = function(service_name) { };
+    $scope.initialize = function(service_name) {
+
+    };
 
     $scope.isEmpty = function(obj) {
         return (Object.keys($scope.errors).length==0);
