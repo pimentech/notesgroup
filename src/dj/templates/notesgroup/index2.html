@@ -38,7 +38,11 @@
                         {{node.nom}}
                     </treecontrol>
                 </div>
-                <div class="col-md-9">.col-md-4</div>
+                <div class="col-md-9" ng-controller="NoteCtrl" ng-init="initialize()">
+                    <div ng-repeat="note in top.notes">
+                        <h2>{{ note.nom }}</h2>
+                    </div>
+                </div>
             </div>
         </body>
     {% endverbatim %}

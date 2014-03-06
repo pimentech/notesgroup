@@ -150,3 +150,46 @@ app.controller('TreeCtrl', function TreeCtrl(
     };
 
 });
+
+
+
+app.controller('NoteCtrl', function NoteCtrl(
+    $scope, $filter, $rootScope, top, $log, ModelUtils, $injector) {
+    $injector.invoke(CommonCtrl,
+                     this,
+                     { $scope: $scope, top:top, $log:$log,
+                       ModelUtils:ModelUtils }
+                    );
+    var self = this;
+    $scope.name = 'note';
+    $scope.queryParams = {
+        chemin : null,
+        date_end: null,
+        date_start: null,
+        demandeur: 0,
+        etat_note: 1,
+        limit: 50,
+        page: 1,
+        path: 'partout',
+        responsable: '2',
+        sel_txt: 'resume',
+        sort_on: 'datemodif',
+        sort_order: '-',
+        timer_actor: 0,
+        timer_date:	null,
+        txt: null
+    };
+
+    $scope.initialize = function() {
+        $scope.load();
+    };
+
+    $scope.load = function(event) {
+        //$scope.query_params = $scope.serialize($scope.queryParams);
+        ModelUtils.load("note",$scope.queryParams).then(function(res) {
+            top.notes = res;
+        });
+    };
+
+
+});
