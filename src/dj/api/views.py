@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
+from django import http
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db import connection
 from django.db.transaction import commit_on_success
+from django.utils import simplejson as json
+
 from rest_framework import generics, status
 from rest_framework.response import Response
-
-from dj.notesgroup import model_serializers
-from dj.notesgroup.models import Note, Timer
-from dj.notesgroup import forms
-
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+
+from dj.notesgroup import model_serializers
+from dj.notesgroup.models import Note, Timer, Droits
+from dj.notesgroup import forms
 
 from datetime import datetime
 import re
@@ -100,76 +102,53 @@ class BaseElementView(NGView, generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SubTree(BaseListView):
-    model = Note
-    serializer_class = model_serializers.TreeListSerializer
+class Tree(BaseElementView):
 
-    def pre_save(self, obj):
-        super(NoteList, self).pre_save(obj)
+    def render_to_response(self, context):
+        return http.HttpResponse(json.dumps(context),
+                                 content_type='application/json')
+    def get(self, request, *args, **kwargs):
+        curs = connection.cursor()
 
-    def get_queryset(self):
-        note = self.kwargs.get('pk')
-        if note is None:
-            return self.request.user.get_profile().root_notes()
-        note = self.get_note_with_perms(note)
-        return Note.objects.filter(statut=0, parent=note, nom__isnull=False,
-                                   type_note__in=(1, 2, 3)
-                                   ).exclude(uid=0).exclude(etat_note=4).exclude(
-            etat_note=3).order_by('nom')
+        curs.execute("SELECT distinct ref_note from droits")
+        notes_with_users = set([ uid for uid, in curs.fetchall() ])
 
 
-
-def get_tree():
-    curs = connection.cursor()
-    # if self.request.user.is_superuser:
-    #     #curs.execute("select uid from note where statut=0 and ref_object=0")
-    #     ids.add(0)
-    # else:
-    #     employe = self.request.user.get_profile()
-    #     current_tree = the_tree
-    last_parent_uid = 0
-    last_children = []
-    last_node = { 'uid':0, 'nom':'Notesgroup', 'children':last_children }
-    last_path = '/'
-    stack = [ (last_path, last_node) ]
-    tree = [ last_node ]
-    curs.execute("SELECT uid,ref_object,path,nom from note where ref_type_note in (1,2,3) and ref_etat_note not in (3,4) and uid!=0 and nom is not null ORDER BY path")
-    for uid, parent_uid, path, nom in curs.fetchall():
-        node = {'uid':uid,'nom':nom}
-        if parent_uid == last_parent_uid:
-            print "append",path, "to", last_path
-            last_children.append(node)
-        elif path.startswith(last_path):
-            stack.append((last_path, last_children))
-            print path,":append",node, "to", last_node
-            last_children = [ node ]
-            last_node['children'] = last_children
-            last_parent_uid = parent_uid
-        elif last_path.startswith(path):
-            print "pop for", path,':'
-            while True:
-                spath, last_children = stack.pop()
-                print "popped", spath, last_children
-                if path.startswith(spath):
-                    break
-                last_children.append(node)
+        if request.user.is_superuser:
+            root_notes = ((0, 'Notesgroup', '/'),)
         else:
-            print "dead node : ", path
-        last_path = path
-        last_node = node
-    return tree
+            employe = request.user.get_profile()
+            curs.execute(
+                "SELECT note.uid,note.nom,note.path FROM droits,note WHERE"
+                " droits.ref_employe=%s AND droits.ref_note=note.uid"
+                " AND note.statut=0 ORDER BY note.path", (employe.pk,))
+            root_notes = curs.fetchall()
+        paths = []
+        node_dict = {}
+        tree = []
+        for uid,nom,path in root_notes:
+            if not paths or not path.startswith(paths[-1]):
+                paths.append(path)
+                node = {'uid':uid, 'nom':nom}
+                node_dict[uid] = node
+                tree.append(node)
+        for path in paths:
+            curs.execute(
+                "SELECT uid,ref_object,nom FROM note WHERE path like %s"
+                " AND ref_type_note in (1,2,3) AND ref_etat_note not in (3,4)"
+                " AND uid!=0 AND nom is not null ORDER BY path", (path+'%',))
+            for uid, parent_uid, nom in curs.fetchall():
+                node = {'uid':uid,'nom':nom}
+                if parent_uid in node_dict:
+                    parent = node_dict[parent_uid]
+                    if 'children' in parent:
+                        parent['children'].append(node)
+                    else:
+                        parent['children'] = [ node ]
+                    node['has_users'] = uid in notes_with_users
+                    node_dict[uid] = node
 
-    # curs.execute("SELECT note.uid,note.ref_parent,note.path,note.nom"
-    #              " FROM droits,note WHERE droits.ref_employe=%s"
-    #              " AND droits.ref_note=note.uid AND note.statut=0"
-    #              " ORDER BY note.path", (employe.pk,))
-    # for uid, parent_uid,path, nom in curs.fetchall():
-    #     for uid, parent, path, nom in curs.fetchall():
-    #         if last_parent is None:
-    #             last_parent = parent
-
-
-
+        return self.render_to_response(tree)
 
 
 class NoteList(BaseListView):
