@@ -7,6 +7,7 @@ from dj.notesgroup import views
 urlpatterns = patterns(
     '',
     url(r'^$', ObjectCaller(views.IndexView)),
+    url(r'^2/$', ObjectCaller(views.Index2View)),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout'),
     url(r'^workgroup/$', ObjectCaller(views.WorkGroupView)),

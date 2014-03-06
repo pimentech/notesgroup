@@ -5,23 +5,22 @@ function TopCtrl($scope, $cookies, $rootScope, $window, $location,
                  $anchorScroll) {
     $scope.top = top;
 
+    $scope.node = null;
+    $scope.tree = null;
+
     $scope.DEBUG = DEBUG;
     $scope.userid = USERID;
 
     var self = this;
 
-
-
-
     $scope.initialize = function(data) {
-        $scope.load();
+        //$scope.load();
     };
 
 
     $scope.log = function(message) {
         if (DEBUG) $log.log(message);
     };
-
 
 
     $scope.toDate = function(objs, fields) {
@@ -88,7 +87,6 @@ function TopCtrl($scope, $cookies, $rootScope, $window, $location,
     };
 
 
-
     $scope.scrollTo = function(id) {
         $location.hash(id);
         $anchorScroll();
@@ -97,7 +95,7 @@ function TopCtrl($scope, $cookies, $rootScope, $window, $location,
 }
 
 
-function CommonCtrl($scope,top, $log, $filter, ModelUtils, ngTableParams) {
+function CommonCtrl($scope,top, $log, $filter, ModelUtils) {
     $scope.name = 'common';
     $scope.top = top;
     $scope.paginatedResources = [];
@@ -116,3 +114,39 @@ function CommonCtrl($scope,top, $log, $filter, ModelUtils, ngTableParams) {
 
 }
 
+
+
+
+app.controller('TreeCtrl', function TreeCtrl(
+    $scope, $filter, $rootScope, top, $log, ModelUtils, $injector) {
+    $injector.invoke(CommonCtrl,
+                     this,
+                     { $scope: $scope, top:top, $log:$log,
+                       ModelUtils:ModelUtils }
+                    );
+    var self = this;
+    $scope.name = 'tree';
+    $scope.tree = null;
+
+    $scope.treeOptions = {
+        nodeChildren: "children",
+        dirSelectable: true,
+        injectClasses: {
+            ul: "a1",
+            li: "a2",
+            liSelected: "a7",
+            iExpanded:  "fa fa-minus-square-o",
+            iCollapsed: "fa fa-plus-square-o",
+            iLeaf: "a5",
+            label: "a6",
+            labelSelected: "a8"
+        }
+    };
+
+    $scope.initialize = function() {
+        ModelUtils.load("tree").then(function(res) {
+            $scope.tree = top.tree = res;
+        });
+    };
+
+});

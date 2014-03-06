@@ -91,6 +91,20 @@ class IndexView(ActiveMemberRequiredView):
                 'timer_date':datetime.today().strftime("%d/%m/%Y")
             })
 
+class Index2View(ActiveMemberRequiredView):
+    template = 'notesgroup/index2.html'
+    note_src = None
+    form = None
+
+    def fill_context(self):
+        data = self.request.POST or None
+        self.note_src = self.request.GET.get('note_src')
+        self.form = forms.SearchForm(
+            data,
+            initial={
+                'timer_date':datetime.today().strftime("%d/%m/%Y")
+            })
+
 
 class ActiveMemberRequiredJsonView(ActiveMemberRequiredView):
     ret = None

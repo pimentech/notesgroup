@@ -197,12 +197,6 @@ app.factory('top', function($rootScope, $http, $cookies) {
         });
     });
 
-    top.entities['statut'] = build_entity([
-        {uid:-1,nom:'Supprimé',cle:'supprime'},
-        {uid:0,nom:'Valide',cle:'valide'},
-        {uid:1,nom:'Validation V1',cle:'validation_v1'},
-        {uid:2,nom:'À traiter',cle:'a_traiter'}
-    ]);
 
     return top;
 });

@@ -63,6 +63,7 @@ treecontrol.tree-classic li .tree-selected {
 }
 
 
+
 treecontrol.tree-light li.tree-expanded i {
     padding: 1px 10px;
     background: url("../images/node-opened-2.png") no-repeat;
@@ -107,3 +108,5 @@ treecontrol.tree-dark li .tree-selected {
 treecontrol.tree-dark {
     color: #ddd;
 }
+
+
