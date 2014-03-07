@@ -1,5 +1,5 @@
 'use strict';
-/* global angular, $, app, ENTITIES, USERNAME, USERID, build_entity */
+/* global angular, $, app, ENTITIES, USERNAME, USERID, EMP_L, build_entity */
 function TopCtrl($scope, $cookies, $rootScope, $window, $location,
                  $log, top, $http, ModelUtils, $filter,
                  $anchorScroll) {
@@ -10,6 +10,7 @@ function TopCtrl($scope, $cookies, $rootScope, $window, $location,
 
     $scope.DEBUG = DEBUG;
     $scope.userid = USERID;
+    $scope.emp_l = EMP_L;
 
     var self = this;
 
@@ -162,6 +163,9 @@ app.controller('NoteCtrl', function NoteCtrl(
                     );
     var self = this;
     $scope.name = 'note';
+
+    $scope.limit = [ 0, 50, 100, 200 ];
+
     $scope.queryParams = {
         chemin : null,
         date_end: null,
@@ -171,7 +175,7 @@ app.controller('NoteCtrl', function NoteCtrl(
         limit: 50,
         page: 1,
         path: 'partout',
-        responsable: '2',
+        responsable: 2,
         sel_txt: 'resume',
         sort_on: 'datemodif',
         sort_order: '-',

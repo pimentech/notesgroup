@@ -10,7 +10,6 @@ from models import Note, EtatNote, Employe, Societe, User, Attachment, Timer
 
 from django.contrib.admin.widgets import AdminFileWidget
 import unicodedata
-from datetime import datetime
 
 class RadioFieldRendererNoEscape(RadioFieldRenderer):
 
@@ -68,7 +67,8 @@ class NoteAddCommentForm(NGModelForm):
                                'style': "height:15;width:95%;"}),
         required=False)
     etat_note = ModelChoiceField(
-        queryset=EtatNote.objects.all().order_by('uid'), empty_label=None)
+        queryset=EtatNote.objects.all().order_by('uid'),
+        empty_label=None)
 
     class Meta:
         model = Note
@@ -185,7 +185,9 @@ class EmployeForm(NGModelForm):
 class SearchForm(Form):
     limit = IntegerField(required=False,
                          initial=50,
-                         widget=Select(choices=(
+                         widget=Select(
+                             attrs = { 'ng-model': 'queryParams.limit'},
+                             choices=(
                              (20, 20),
                              (50, 50),
                              (100, 100),
@@ -194,12 +196,14 @@ class SearchForm(Form):
 
     page = IntegerField(required=False)
     etat_note = IntegerField(required=False,
-                             widget=Select(choices=(
-                                 (-1, _("open or undefined")),
-                                 (1, _("open")),
-                                 (2, _("pending")),
-                                 (3, _("resolved")),
-                                 (0, _("All")))))
+                             widget=Select(
+                                 attrs = { 'ng-model': 'queryParams.etat_note'},
+                                 choices=(
+                                     (-1, _("open or undefined")),
+                                     (1, _("open")),
+                                     (2, _("pending")),
+                                     (3, _("resolved")),
+                                     (0, _("All")))))
     path = CharField(required=False,
                      widget=Select(choices=(
                          ("partout", _("everywhere")),

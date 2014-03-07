@@ -1,135 +1,104 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>NotesGroup</title>
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="{{ http_static }}/css/tree-control.css"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NotesGroup</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-cookies.js"></script>
-        <script>
-         var DEBUG = true;
-         var USERID = {{ user.id }};
-        </script>
-        <script src="{{ http_static }}/js/ext/angular-tree-control.js"></script>
-        <script src="{{ http_static }}/js/app.js"></script>
-        <script src="{{ http_static }}/js/controllers.js"></script>
-    </head>
+    <link rel="stylesheet" href="{{ http_static }}/css/tree-control.css"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-cookies.js"></script>
+    <script>
+     var DEBUG = true;
+     var USERID = {{ user.id }};
+     var EMP_L = {{ employe_l|safe }};
+    </script>
+    <script src="{{ http_static }}/js/ext/angular-tree-control.js"></script>
+    <script src="{{ http_static }}/js/app.js"></script>
+    <script src="{{ http_static }}/js/controllers.js"></script>
+  </head>
+  <body ng-app="myApp"
+        ng-controller="TopCtrl"
+        ng-init="initialize()">
+    <div class="row">
+      <div class="col-md-3">.col-md-4</div>
+      <div class="col-md-9" ng-controller="NoteCtrl">
+        <form class="form-inline" role="form">
+
+          <label>
+            {% trans "State" %} {{ form.etat_note }}
+          </label>
+
+          <label>
+            {% trans "Scope" %}
+            {{ form.path }}
+            <span id="html_chemin_txt"></span>
+          </label>
+
+          <label>
+            {% trans "From" %}
+            <select ng-model="queryParams.demandeur" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
+          </label>
+
+          <label>
+            {% trans "To" %}
+            <select ng-model="queryParams.responsable" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
+          </label>
+
+          <label>
+            <b>{% trans "Actor" %}</b>&nbsp;
+            <select ng-model="queryParams.timer_actor" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
+            <input type="text" ng-model="queryParams.timer_date" />
+          </label>
+
+          <br />
+
+          <label>
+            <b>{{ form.sel_txt }}</b>
+          </label>
+          <label>
+            {% trans "contains" %} <input type="text" id="id_resume" name="txt" size="40" />
+          </label>
+
+
+          <span id="label_group">
+            {% trans "Modified between" %} <input type="text" ng-model="queryParams.date_start" />
+            {% trans "and" %} <input type="text" ng-model="queryParams.date_start" />
+          </span>
+          <input type="hidden" id="id_chemin" name="chemin" />
+
+          <label>
+            {{ form.limit }} {% trans "results" %}
+          </label>
+
+          <input style="btn btn-submit" type="submit" value="{% trans "Search" %}" ng-click="load()" />
+
+        </form>
+      </div>
+    </div>
     {% verbatim %}
-        <body ng-app="myApp"
-              ng-controller="TopCtrl"
-              ng-init="initialize()">
-            <div class="row">
-                <div class="col-md-3">.col-md-4</div>
-                <div class="col-md-9">
-                    <form class="form-inline" role="form">
-                        <label id="id_etat_note_label">
-                            <b>{% trans "State" %}</b>
-                            {{ form.etat_note }}
-                        </label>
-
-                        <label id="id_path_label" style="display:none">
-                            <b>{% trans "Scope" %}</b>
-                            {{ form.path }}
-                            <span id="html_chemin_txt"></span>
-                        </label>
-
-                        <label id="id_demandeur_label">
-                            <b>{% trans "From" %}</b>&nbsp;<select id="id_demandeur" name="demandeur">
-                                <option value="0"></option>
-                                {% for societe in employe.workgroup_by_societe %}
-                                    <option disabled>{{ societe.societe.nom }}</option>
-                                    {% for e in societe.employes %}
-                                        <option value="{{ e.uid }}">{{ e }}</option>
-                                    {% endfor %}
-                                {% endfor %}
-                            </select>
-                        </label>
-
-                        <label>
-                            <b>{% trans "To" %}</b>&nbsp;<select id="id_responsable" name="responsable">
-                                <option value="0"></option>
-                                {% for societe in employe.workgroup_by_societe %}
-                                    <option disabled>{{ societe.societe.nom }}</option>
-                                    {% for e in societe.employes %}
-                                        <option value="{{ e.uid }}">{{ e }}</option>
-                                    {% endfor %}
-                                {% endfor %}
-                            </select>
-                        </label>
-
-                        <label>
-                            <b>{% trans "Actor" %}</b>&nbsp;
-                            <select id="id_timer_actor" name="timer_actor">
-                                <option value="0"></option>
-                                {% for societe in employe.workgroup_by_societe %}
-                                    <option disabled>{{ societe.societe.nom }}</option>
-                                    {% for e in societe.employes %}
-                                        <option value="{{ e.uid }}">{{ e }}</option>
-                                    {% endfor %}
-                                {% endfor %}
-                            </select>
-                            {{ form.timer_date }}
-
-                        </label>
-
-
-
-                        <br />
-
-                        <label>
-                            <b>{{ form.sel_txt }}</b>
-                        </label>
-                        <label>
-                            {% trans "contains" %} <input type="text" id="id_resume" name="txt" size="40" />
-                        </label>
-
-                        <br />
-
-                        <span id="label_group">
-                            <b>{% trans "Modified between" %}</b> {{ form.date_start }}
-                            <b>{% trans "and" %}</b> {{ form.date_end }}
-                        </span>
-                        <input type="hidden" id="id_chemin" name="chemin" />
-                        <span id="label_group">
-                            <b>{% trans "Sort by" %}</b> {{ form.sort_on }} {{ form.sort_order }}
-                        </span>
-
-                        <label>
-                            {{ form.limit }}
-                        </label>
-                        <input type="hidden" name="page" id="id_page" value="1">
-
-                        <input style="position:right" type="submit" id="search_button" value="{% trans "Search" %}" target="nglist" />
-
-                    </form>
-
-
-
-
-                </div>
-            </div>
-            <div class="row" ng-controller="CommonCtrl" ng-init="initialize()">
-                <div class="col-md-3" ng-controller="TreeCtrl" ng-init="initialize()">
-                    <treecontrol tree-model="top.tree"
-                                 options="treeOptions"
-                                 on-selection="showSelected(node)"
-                                 selected-node="node1">
-                        {{node.nom}}
-                    </treecontrol>
-                </div>
-                <div class="col-md-9" ng-controller="NoteCtrl" ng-init="initialize()">
-                    <div ng-repeat="note in top.notes">
-                        <h2>{{ note.nom }}</h2>
-                    </div>
-                </div>
-            </div>
-        </body>
+      <div class="row" ng-controller="CommonCtrl" ng-init="initialize()">
+        <div class="col-md-3" ng-controller="TreeCtrl" ng-init="initialize()">
+          <treecontrol tree-model="top.tree"
+                       options="treeOptions"
+                       on-selection="showSelected(node)"
+                       selected-node="node1">
+            {{node.nom}}
+          </treecontrol>
+        </div>
+        <div class="col-md-9" ng-controller="NoteCtrl" ng-init="initialize()">
+          <div ng-repeat="note in top.notes">
+            <h4>{{ note.nom }}</h4>
+          </div>
+        </div>
+      </div>
     {% endverbatim %}
+
+  </body>
 </html>

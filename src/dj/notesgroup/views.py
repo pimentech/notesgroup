@@ -95,10 +95,34 @@ class Index2View(ActiveMemberRequiredView):
     template = 'notesgroup/index2.html'
     note_src = None
     form = None
+    employe_d = None
+    employe_l = None
+
 
     def fill_context(self):
         data = self.request.POST or None
         self.note_src = self.request.GET.get('note_src')
+
+        self.employe_d = {}
+        self.employe_l = []
+        for societe in self.employe.workgroup_by_societe():
+            societe_name = unicode(societe['societe'])
+            for e in societe['employes']:
+                emp = {
+                    'uid' : e.uid,
+                    'title' : u"%s %s" % (e.prenom, e.nom),
+                    'tel' : e.tel,
+                    'email' : e.user.email,
+                    'username' : e.user.username,
+                    'societe': societe_name
+                }
+                self.employe_l.append(emp)
+
+        # self.employe_d = json.dumps(self.employe_d, ensure_ascii=False,
+        #                             cls=json.JSONEncoder)
+        self.employe_l = json.dumps(self.employe_l, ensure_ascii=False,
+                                    cls=json.JSONEncoder)
+
         self.form = forms.SearchForm(
             data,
             initial={

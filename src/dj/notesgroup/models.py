@@ -321,8 +321,11 @@ class Employe(Model):
     def workgroup(self):
         if self._workgroup is None:
             ids = list(self.workgroup_ids())
-            self._workgroup = Employe.objects.filter(uid__in=ids).exclude(
-                uid=0).order_by('societe__nom', 'nom', 'prenom')
+            self._workgroup = Employe.objects.filter(uid__in=ids)\
+                                             .exclude(uid=0)\
+                                             .select_related("user")\
+                                             .order_by('societe__nom',
+                                                       'nom', 'prenom')
         return self._workgroup
 
     _workgroup_by_societe = None
