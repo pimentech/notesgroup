@@ -155,7 +155,7 @@ app.controller('TreeCtrl', function TreeCtrl(
 
 
 app.controller('NoteCtrl', function NoteCtrl(
-    $scope, $filter, $rootScope, top, $log, ModelUtils, $injector) {
+    $scope, $filter, $rootScope, top, $log, ModelUtils, $injector, $sanitize) {
     $injector.invoke(CommonCtrl,
                      this,
                      { $scope: $scope, top:top, $log:$log,
@@ -195,5 +195,10 @@ app.controller('NoteCtrl', function NoteCtrl(
         });
     };
 
+    $scope.toggleDetail = function(note) {
+        ModelUtils.get("note", note.uid).then(function(res) {
+            note.description = res.description;
+        });
+    };
 
 });

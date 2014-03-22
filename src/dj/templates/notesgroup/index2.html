@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ http_static }}/css/tree-control.css"></script>
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-sanitize.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-cookies.js"></script>
     <script>
      var DEBUG = true;
@@ -27,8 +28,8 @@
         ng-controller="TopCtrl"
         ng-init="initialize()">
     <div class="row">
-      <div class="col-md-3">.col-md-4</div>
-      <div class="col-md-9" ng-controller="NoteCtrl">
+      <div class="col-md-2">.col-md-4</div>
+      <div class="col-md-10" ng-controller="NoteCtrl">
         <form class="form-inline" role="form">
 
           <label>
@@ -57,15 +58,12 @@
             <input type="text" ng-model="queryParams.timer_date" />
           </label>
 
-          <br />
-
           <label>
             <b>{{ form.sel_txt }}</b>
           </label>
           <label>
             {% trans "contains" %} <input type="text" id="id_resume" name="txt" size="40" />
           </label>
-
 
           <span id="label_group">
             {% trans "Modified between" %} <input type="text" ng-model="queryParams.date_start" />
@@ -77,14 +75,14 @@
             {{ form.limit }} {% trans "results" %}
           </label>
 
-          <input style="btn btn-submit" type="submit" value="{% trans "Search" %}" ng-click="load()" />
+          <input class="btn btn-primary" type="submit" value="{% trans "Search" %}" ng-click="load()" />
 
         </form>
       </div>
     </div>
     {% verbatim %}
       <div class="row" ng-controller="CommonCtrl" ng-init="initialize()">
-        <div class="col-md-3" ng-controller="TreeCtrl" ng-init="initialize()">
+        <div class="col-md-2" ng-controller="TreeCtrl" ng-init="initialize()">
           <treecontrol tree-model="top.tree"
                        options="treeOptions"
                        on-selection="showSelected(node)"
@@ -92,9 +90,15 @@
             {{node.nom}}
           </treecontrol>
         </div>
-        <div class="col-md-9" ng-controller="NoteCtrl" ng-init="initialize()">
-          <div ng-repeat="note in top.notes">
-            <h4>{{ note.nom }}</h4>
+        <div class="col-md-10" ng-controller="NoteCtrl" ng-init="initialize()">
+          <div class="list-group">
+            <div ng-repeat="note in top.notes" class="list-group-item">
+              <h4 class="list-group-item-headings"><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a></h4>
+              <p class="list-group-item-text" ng-bind-html="note.description">
+              </p>
+
+            </div>
+
           </div>
         </div>
       </div>
