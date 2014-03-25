@@ -227,7 +227,7 @@ class SearchForm(Form):
         ("chemin", _("Path")),
         ("priorite", _("Priority")))))
     sort_order = CharField(
-        required=True, initial='-',
+        required=False, initial='-',
         widget=RadioSelect(choices=(
             ('-', mark_safe(u'<li class="fa fa-arrow-down"></li>')),
             ('', mark_safe(u'<li class="fa fa-arrow-up"></li>')))))
