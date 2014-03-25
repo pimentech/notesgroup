@@ -10,7 +10,6 @@ from models import Note, EtatNote, Employe, Societe, User, Attachment, Timer
 
 from django.contrib.admin.widgets import AdminFileWidget
 import unicodedata
-from datetime import datetime
 
 class RadioFieldRendererNoEscape(RadioFieldRenderer):
 
@@ -52,7 +51,6 @@ class TimerForm(NGModelForm):
                                        (3.0, "3:00"), (3.5, "3:30"),
                                        (4.0, "4:00"), (4.5, "4:30"),
                                        (5.0, "5:00"), (5.5, "5:30"),
-                                       (6.0, "6:00"), (6.5, "6:30"),
                                        (6.0, "6:00"), (6.5, "6:30"),
                                        (7.0, "7:00"), (7.5, "7:30")),
                               attrs={
@@ -226,7 +224,8 @@ class SearchForm(Form):
         ("ref_type_note", _("Type")),
         ("ref_demandeur_employe", _("From")),
         ("ref_responsable_employe", _("To")),
-        ("chemin", _("Path")))))
+        ("chemin", _("Path")),
+        ("priorite", _("Priority")))))
     sort_order = CharField(
         required=True, initial='-',
         widget=RadioSelect(choices=(
