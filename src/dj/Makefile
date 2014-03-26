@@ -6,10 +6,7 @@ SRCCONFIGDIR = ../../config
 LANGUAGES = en fr
 
 SRCDJANGOPOS = ${LANGUAGES:%=locale/%/LC_MESSAGES/django.po}
-SRCDJANGOPOSOK = ${SRCDJANGOPOS:%.po=%.ok}
-
 ENTITIESPOS = ${LANGUAGES:%=locale/%/LC_MESSAGES/entities.po}
-ENTITIESPOSOK = ${ENTITIESPOS:%.po=%.ok}
 
 VPATH=.:${SRCXMLDIR}:${SRCCONFIGDIR}
 PYTHONPATH_DEV = ..:${HOME}/src/pimentech/libcommonDjango:${HOME}/src/libcommonDjango:${SRCCONFIGDIR}
@@ -72,7 +69,7 @@ install-locale.ok: compile-locale.ok
 	done
 	@date > $@
 
-build-locale.ok: ${SRCDJANGOPOSOK} ${ENTITIESPOSOK}
+build-locale.ok: ${SRCDJANGOPOS} ${ENTITIESPOS}
 	@echo "merging .po: ${SRCDJANGOPOS} ${ENTITIESPOS}"
 	@for lang in ${LANGUAGES}; do \
 		msgcat --use-first locale/$$lang/LC_MESSAGES/django.po locale/$$lang/LC_MESSAGES/entities.po > locale/$$lang/LC_MESSAGES/django-all.po; \
