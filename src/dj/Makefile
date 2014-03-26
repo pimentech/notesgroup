@@ -66,6 +66,12 @@ install-locale.ok: compile-locale.ok
 	done
 	@date > $@
 
+build-locale.ok: ${SRCDJANGOPOSOK} ${ENTITIESPOSOK}
+	@echo "merging .po: ${SRCDJANGOPOS} ${ENTITIESPOS}"
+	@for lang in ${LANGUAGES}; do \
+		msgcat --use-first locale/$$lang/LC_MESSAGES/django.po locale/$$lang/LC_MESSAGES/entities.po > locale/$$lang/LC_MESSAGES/django-all.po; \
+	done
+	@date > $@
 
 shell:
 	@python manage.py shell
