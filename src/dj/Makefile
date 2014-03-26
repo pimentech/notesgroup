@@ -5,6 +5,12 @@ SRCXMLDIR = ../../src/xml
 SRCCONFIGDIR = ../../config
 LANGUAGES = en fr
 
+SRCDJANGOPOS = ${LANGUAGES:%=locale/%/LC_MESSAGES/django.po}
+SRCDJANGOPOSOK = ${SRCDJANGOPOS:%.po=%.ok}
+
+ENTITIESPOS = ${LANGUAGES:%=locale/%/LC_MESSAGES/entities.po}
+ENTITIESPOSOK = ${ENTITIESPOS:%.po=%.ok}
+
 VPATH=.:${SRCXMLDIR}:${SRCCONFIGDIR}
 PYTHONPATH_DEV = ..:${HOME}/src/pimentech/libcommonDjango:${HOME}/src/libcommonDjango:${SRCCONFIGDIR}
 PYTHONDIR = ${HOME}/lib/python
@@ -51,10 +57,10 @@ locales:
         python manage.py makemessages  -l $$lang; \
     done
 
-compile-locale.ok:
+compile-locale.ok: build-locale.ok
 	@echo "compiling locales"
 	@for lang in ${LANGUAGES}; do \
-		msgfmt -o locale/$$lang/LC_MESSAGES/django.mo locale/$$lang/LC_MESSAGES/django.po; \
+		msgfmt -o locale/$$lang/LC_MESSAGES/django.mo locale/$$lang/LC_MESSAGES/django-all.po; \
 	done
 	@date > $@
 
