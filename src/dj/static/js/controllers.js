@@ -161,6 +161,8 @@ app.controller('NoteCtrl', function NoteCtrl(
     $scope.showSelected = function(node_tree) {
         $scope.queryParams.chemin = node_tree.uid;
         $scope.queryParams.path = 'ici';
+        $scope.queryParams.responsable = 0;
+        $scope.queryParams.demandeur = 0;
         $scope.load();
     };
 
