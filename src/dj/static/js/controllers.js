@@ -96,67 +96,10 @@ function TopCtrl($scope, $cookies, $rootScope, $window, $location,
 }
 
 
-function CommonCtrl($scope,top, $log, $filter, ModelUtils) {
-    $scope.name = 'common';
-    $scope.top = top;
-    $scope.paginatedResources = [];
-    top[$scope.name+'s'] = []; // anciennement $scope.resources
-    top[$scope.name] = {};
-    top[$scope.name+'_reload'] = false;
-    $scope.errors = {};
-
-    $scope.initialize = function(service_name) {
-
-    };
-
-    $scope.isEmpty = function(obj) {
-        return (Object.keys($scope.errors).length==0);
-    };
-
-}
-
-
-
-
-app.controller('TreeCtrl', function TreeCtrl(
-    $scope, $filter, $rootScope, top, $log, ModelUtils, $injector) {
-    $injector.invoke(CommonCtrl,
-                     this,
-                     { $scope: $scope, top:top, $log:$log,
-                       ModelUtils:ModelUtils }
-                    );
-    var self = this;
-    $scope.name = 'tree';
-    $scope.tree = null;
-
-    $scope.treeOptions = {
-        nodeChildren: "children",
-        dirSelectable: true,
-        injectClasses: {
-            ul: "a1",
-            li: "a2",
-            liSelected: "a7",
-            iExpanded:  "fa fa-minus-square-o",
-            iCollapsed: "fa fa-plus-square-o",
-            iLeaf: "a5",
-            label: "a6",
-            labelSelected: "a8"
-        }
-    };
-
-    $scope.initialize = function() {
-        ModelUtils.load("tree").then(function(res) {
-            $scope.tree = top.tree = res;
-        });
-    };
-
-});
-
-
 
 app.controller('NoteCtrl', function NoteCtrl(
     $scope, $filter, $rootScope, top, $log, ModelUtils, $injector, $sanitize) {
-    $injector.invoke(CommonCtrl,
+    $injector.invoke(TopCtrl,
                      this,
                      { $scope: $scope, top:top, $log:$log,
                        ModelUtils:ModelUtils }
@@ -167,7 +110,7 @@ app.controller('NoteCtrl', function NoteCtrl(
     $scope.limit = [ 0, 50, 100, 200 ];
 
     $scope.queryParams = {
-        chemin : null,
+        chemin : null, // Changer ce nom, c'est en fait l'id de recherche du noeud
         date_end: null,
         date_start: null,
         demandeur: 0,
@@ -184,7 +127,27 @@ app.controller('NoteCtrl', function NoteCtrl(
         txt: null
     };
 
+    $scope.tree = null;
+    $scope.treeOptions = {
+        nodeChildren: "children",
+        dirSelectable: true,
+        injectClasses: {
+            ul: "a1",
+            li: "a2",
+            liSelected: "a7",
+            iExpanded:  "fa fa-minus-square-o",
+            iCollapsed: "fa fa-plus-square-o",
+            iLeaf: "a5",
+            label: "a6",
+            labelSelected: "a8"
+        }
+    };
+
+
     $scope.initialize = function() {
+        ModelUtils.load("tree").then(function(res) {
+            $scope.tree = top.tree = res;
+        });
         $scope.load();
     };
 
@@ -193,6 +156,12 @@ app.controller('NoteCtrl', function NoteCtrl(
         ModelUtils.load("note",$scope.queryParams).then(function(res) {
             top.notes = res;
         });
+    };
+
+    $scope.showSelected = function(node_tree) {
+        $scope.queryParams.chemin = node_tree.uid;
+        $scope.queryParams.path = 'ici';
+        $scope.load();
     };
 
     $scope.toggleDetail = function(note) {

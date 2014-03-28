@@ -11,10 +11,12 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
     <link rel="stylesheet" href="{{ http_static }}/css/tree-control.css"></script>
+    <link rel="stylesheet" href="{{ http_static }}/css/notesgroup.css"></script>
 
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-sanitize.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-cookies.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-sanitize.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-cookies.js"></script>
+    <script src='http://cdn.jsdelivr.net/g/angular.textangular@1.2.0(textAngular-sanitize.min.js+textAngular.min.js)'></script>
     <script>
      var DEBUG = true;
      var USERID = {{ user.id }};
@@ -81,8 +83,8 @@
       </div>
     </div>
     {% verbatim %}
-      <div class="row" ng-controller="CommonCtrl" ng-init="initialize()">
-        <div class="col-md-2" ng-controller="TreeCtrl" ng-init="initialize()">
+      <div class="row" ng-controller="NoteCtrl" ng-init="initialize()">
+        <div class="col-md-2">
           <treecontrol tree-model="top.tree"
                        options="treeOptions"
                        on-selection="showSelected(node)"
@@ -90,13 +92,13 @@
             {{node.nom}}
           </treecontrol>
         </div>
-        <div class="col-md-10" ng-controller="NoteCtrl" ng-init="initialize()">
+        <div class="col-md-10">
           <div class="list-group">
             <div ng-repeat="note in top.notes" class="list-group-item">
               <h4 class="list-group-item-headings"><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a></h4>
-              <p class="list-group-item-text" ng-bind-html="note.description">
+              <p class="list-group-item-text">
+                <div ng-show="note.description" text-angular ng-model="note.description"></div>
               </p>
-
             </div>
 
           </div>

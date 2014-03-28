@@ -96,24 +96,24 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 LOGIN_REDIRECT_URL = '/'
 
 
-# if DEVELOPMENT_ENVIRON:
-#     # https://github.com/dcramer/django-devserver
-#     # pip install git+git://github.com/dcramer/django-devserver#egg=django-devserver
-#     INSTALLED_APPS += 'devserver',
-#     DEVSERVER_IGNORED_PREFIXES = ['/static', '/css', '/js' ]
-#     DEVSERVER_TRUNCATE_SQL = True
+if DEVELOPMENT_ENVIRON:
+    # https://github.com/dcramer/django-devserver
+    # pip install git+git://github.com/dcramer/django-devserver#egg=django-devserver
+    INSTALLED_APPS += 'devserver',
+    DEVSERVER_IGNORED_PREFIXES = ['/static', '/css', '/js' ]
+    DEVSERVER_TRUNCATE_SQL = True
 
-#     DEVSERVER_MODULES = (
-#         'devserver.modules.sql.SQLRealTimeModule',
-#         # 'devserver.modules.sql.SQLSummaryModule',
-#         # 'devserver.modules.profile.ProfileSummaryModule',
+    DEVSERVER_MODULES = (
+        'devserver.modules.sql.SQLRealTimeModule',
+        # 'devserver.modules.sql.SQLSummaryModule',
+        # 'devserver.modules.profile.ProfileSummaryModule',
 
-#         # Modules not enabled by default
-#         #'devserver.modules.ajax.AjaxDumpModule',
-#         #'devserver.modules.profile.MemoryUseModule',
-#         #'devserver.modules.cache.CacheSummaryModule',
-#         #'devserver.modules.profile.LineProfilerModule',
-#         )
+        # Modules not enabled by default
+        #'devserver.modules.ajax.AjaxDumpModule',
+        #'devserver.modules.profile.MemoryUseModule',
+        #'devserver.modules.cache.CacheSummaryModule',
+        #'devserver.modules.profile.LineProfilerModule',
+        )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 #SERVER_EMAIL = 'www-data@' + INTERNET_HOST

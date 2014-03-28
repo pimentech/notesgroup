@@ -12,7 +12,7 @@
 *** minification js
 ** TOCHECK cacher les nouveaux critères pour les non staff
    dans le formulaire de recherche
-** TODO mise à jour du script de rapport journalier
+** DONE mise à jour du script de rapport journalier
    avec avg timer (yesterday-lundi)
    peut etre faut il l'envoyer dès le soir ?
    oui car ça permettrait de rattraper
@@ -20,8 +20,8 @@
 ** TODO pouvoir modifier le timer directement depuis la liste
 ** TODO modifier le code pour prendre systématiquement en code la date de travail
 ** TODO mettre à jour les locales
-** TODO migrer le repo sur github
-** TODO créer une branche angularjs/bootstrap
+** DONE migrer le repo sur github
+** DONE créer une branche angularjs/bootstrap
 * IDÉES
 ** DONE timers sur les notes
    uniquement insert ou delete, avec ref auteur,
