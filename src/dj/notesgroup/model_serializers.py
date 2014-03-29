@@ -50,3 +50,18 @@ class NoteSerializer(NGSerializer):
                   'date_debut', 'date_fin', 'reussite',
                   'description', 'demandeur_employe', 'responsable_employe',
                   'montant', 'priorite', 'etat_note', 'type_note')
+
+
+
+class NoteDetailSerializer(NoteSerializer):
+    actors = serializers.WritableField()
+
+    def to_native(self, obj):
+        ret = super(NoteDetailSerializer, self).to_native(obj)
+        ret['actors'] = list(models.Employe.objects.\
+                             filter(uid__in=[0] + obj.workgroup_ids()).\
+                             values_list('uid', flat=True).\
+                             order_by('prenom', 'nom'))
+        return ret
+
+

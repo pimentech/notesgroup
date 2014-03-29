@@ -211,7 +211,7 @@ class NoteList(BaseListView):
 
 class NoteElement(BaseElementView):
     model = Note
-    serializer_class = model_serializers.NoteSerializer
+    serializer_class = model_serializers.NoteDetailSerializer
 
     def get_queryset(self):
         note = super(NoteElement, self).get_queryset()

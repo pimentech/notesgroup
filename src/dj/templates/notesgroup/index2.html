@@ -26,79 +26,124 @@
     <script src="{{ http_static }}/js/app.js"></script>
     <script src="{{ http_static }}/js/controllers.js"></script>
   </head>
-  <body ng-app="myApp"
-        ng-controller="NoteCtrl"
-        ng-init="initialize()">
-    <div class="row">
-      <div class="col-md-2">.col-md-4</div>
-      <div class="col-md-10">
-        <form class="form-inline" role="form">
-          <label>
-            {% trans "State" %}
-            {{ form.etat_note }}
-          </label>
-          <label>
-            {% trans "Scope" %}
-            {{ form.path }}
-            <span id="html_chemin_txt"></span>
-          </label>
-          <label>
-            {% trans "From" %}
-            <select ng-model="queryParams.demandeur" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
-          </label>
-          <label>
-            {% trans "To" %}
-            <select ng-model="queryParams.responsable" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
-          </label>
-          <label>
-            <b>{% trans "Actor" %}</b>&nbsp;
-            <select ng-model="queryParams.timer_actor" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
-            <input type="text" ng-model="queryParams.timer_date" />
-          </label>
-          <label>
-            <b>{{ form.sel_txt }}</b>
-          </label>
-          <label>
-            {% trans "contains" %} <input type="text" id="id_resume" name="txt" size="40" />
-          </label>
+  <body ng-app="myApp" ng-controller="TopCtrl" ng-init="initialize()">
+    <div class="container" ng-controller="NoteCtrl" ng-init="initialize()">
+      <div class="row">
+        <div class="col-md-2">.col-md-4</div>
+        <div class="col-md-10">
+          <form class="form-inline" role="form">
+            <label>
+              {% trans "State" %}
+              {{ form.etat_note }}
+            </label>
+            <label>
+              {% trans "Scope" %}
+              {{ form.path }}
+              <span id="html_chemin_txt"></span>
+            </label>
+            <label>
+              {% trans "From" %}
+              <select ng-model="queryParams.demandeur" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
+            </label>
+            <label>
+              {% trans "To" %}
+              <select ng-model="queryParams.responsable" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
+            </label>
+            <label>
+              <b>{% trans "Actor" %}</b>&nbsp;
+              <select ng-model="queryParams.timer_actor" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
+              <input type="text" ng-model="queryParams.timer_date" />
+            </label>
+            <label>
+              <b>{{ form.sel_txt }}</b>
+            </label>
+            <label>
+              {% trans "contains" %} <input type="text" id="id_resume" name="txt" size="40" />
+            </label>
 
-          <span id="label_group">
-            {% trans "Modified between" %} <input type="text" ng-model="queryParams.date_start" />
-            {% trans "and" %} <input type="text" ng-model="queryParams.date_start" />
-          </span>
-          <input type="hidden" id="id_chemin" name="chemin" />
+            <span id="label_group">
+              {% trans "Modified between" %} <input type="text" ng-model="queryParams.date_start" />
+              {% trans "and" %} <input type="text" ng-model="queryParams.date_start" />
+            </span>
+            <input type="hidden" id="id_chemin" name="chemin" />
 
-          <label>
-            {{ form.limit }} {% trans "results" %}
-          </label>
+            <label>
+              {{ form.limit }} {% trans "results" %}
+            </label>
 
-          <input class="btn btn-primary" type="submit" value="{% trans "Search" %}" ng-click="load()" />
+            <input class="btn btn-primary" type="submit" value="{% trans "Search" %}" ng-click="load()" />
 
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
-    {% verbatim %}
       <div class="row">
         <div class="col-md-2">
-          <treecontrol tree-model="top.tree"
-                       options="treeOptions"
-                       on-selection="showSelected(node)"
-                       selected-node="node1">
-            {{node.nom}}
-          </treecontrol>
+          {% verbatim %}
+            <treecontrol tree-model="top.tree"
+                         options="treeOptions"
+                         on-selection="showSelected(node)"
+                         selected-node="node1">
+              {{node.nom}}
+            </treecontrol>
+          {% endverbatim %}
         </div>
         <div class="col-md-10">
           <div class="list-group">
             <div ng-repeat="note in top.notes" class="list-group-item">
-              <h4 class="list-group-item-headings"><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a></h4>
+              {% verbatim %}
+                <h4 class="list-group-item-headings"><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a></h4>
+              {% endverbatim %}
               <p class="list-group-item-text">
-                <div ng-show="note.description" text-angular ng-model="note.description"></div>
+                <form role="form" class="form-inline" ng-show="note.showDetail">
+                  <div class="form-group">
+                    <label>{% trans "Name" %}</label>
+                    {% verbatim %}{% endverbatim %}
+
+                    <input type="text" class="form-control" ng-model="note.nom" />
+                  </div>
+                  <div class="form-group">
+                    <label>{% trans "Type" %}</label>
+                    <select class="form-control" ng-model="note.type_note" ng-options="e.id as e.name for e in [
+                            {id:0, name:'indefini'},
+                            {id:1, name:'département'},
+                            {id:2, name:'dossier'},
+                            {id:3, name:'projet'},
+                            {id:4, name:'tâche'},
+                            {id:5, name:'rendez-vous'},
+                            {id:6, name:'bug'},
+                            {id:7, name:'souhait'},
+                            {id:8, name:'message'}
+                            ]"></select>
+                  </div>
+                  <div class="form-group">
+                    <label>{% trans "State" %}</label>
+                    <select class="form-control" ng-model="note.etat_note" ng-options="e.id as e.name for e in [
+                            {id:0, name:'{% trans "undefined" %}'},
+                            {id:1, name:'{% trans "open" %}'},
+                            {id:2, name:'{% trans "pending" %}'},
+                            {id:3, name:'{% trans "resolved" %}'},
+                            {id:4, name:'{% trans "cancelled" %}'}
+                            ]"></select>
+                  </div>
+                  <div class="form-group">
+                    <label>{% trans "Summary" %}</label>
+                    <input type="text" class="form-control" ng-model="note.resume" />
+                  </div>
+                  <div class="form-group">
+                    <label>{% trans "From" %}</label>
+                    <select class="form-control" ng-model="note.demandeur_employe" ng-options="e as emp_d[e].title for e in note.actors"></select>
+                  </div>
+                  <div class="form-group">
+                    <label>{% trans "To" %}</label>
+                    <select class="form-control" ng-model="note.responsable_employe" ng-options="e as emp_d[e].title for e in note.actors"></select>
+                  </div>
+                  <div ng-show="note.showDetail" text-angular ng-model="note.description"></div>
+                </form>
               </p>
             </div>
-
           </div>
         </div>
       </div>
-    {% endverbatim %}
+    </div>
   </body>
 </html>

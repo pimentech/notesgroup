@@ -11,11 +11,14 @@ function TopCtrl($scope, $cookies, $rootScope, $window, $location,
     $scope.DEBUG = DEBUG;
     $scope.userid = USERID;
     $scope.emp_l = EMP_L;
+    $scope.emp_d = {};
 
     var self = this;
 
     $scope.initialize = function(data) {
-        //$scope.load();
+        angular.forEach(EMP_L, function(e) {
+            $scope.emp_d[e.uid] = e;
+        });
     };
 
 
@@ -145,6 +148,9 @@ app.controller('NoteCtrl', function NoteCtrl(
 
 
     $scope.initialize = function() {
+        angular.forEach(EMP_L, function(e) {
+            $scope.emp_d[e.uid] = e;
+        });
         ModelUtils.load("tree").then(function(res) {
             $scope.tree = top.tree = res;
         });
@@ -155,6 +161,9 @@ app.controller('NoteCtrl', function NoteCtrl(
         //$scope.query_params = $scope.serialize($scope.queryParams);
         ModelUtils.load("note", $scope.queryParams).then(function(res) {
             top.notes = res;
+            angular.forEach(res, function(obj) {
+                obj.showDetail = false;
+            });
         });
     };
 
@@ -163,13 +172,17 @@ app.controller('NoteCtrl', function NoteCtrl(
         $scope.queryParams.path = 'ici';
         $scope.queryParams.responsable = 0;
         $scope.queryParams.demandeur = 0;
+        $scope.queryParams.etat_note = -1;
         $scope.load();
     };
 
     $scope.toggleDetail = function(note) {
-        ModelUtils.get("note", note.uid).then(function(res) {
-            note.description = res.description;
-        });
+        if (note.showDetail) note.showDetail = false; else note.showDetail = true;
+        if (note.showDetail) {
+            ModelUtils.get("note", note.uid).then(function(res) {
+                angular.extend(note, res);
+            });
+        }
     };
 
 });
