@@ -29,8 +29,7 @@
   <body ng-app="myApp" ng-controller="TopCtrl" ng-init="initialize()">
     <div class="container" ng-controller="NoteCtrl" ng-init="initialize()">
       <div class="row">
-        <div class="col-md-2">.col-md-4</div>
-        <div class="col-md-10">
+        <div class="col-md-12">
           <form class="form-inline" role="form">
             <label>
               {% trans "State" %}
@@ -83,7 +82,7 @@
                          options="treeOptions"
                          on-selection="showSelected(node)"
                          selected-node="node1">
-              {{node.nom}}
+              <i class="fa fa-{{ icon[node.type_note] }}"></i> {{node.nom}}
             </treecontrol>
           {% endverbatim %}
         </div>
@@ -91,7 +90,7 @@
           <div class="list-group">
             <div ng-repeat="note in top.notes" class="list-group-item">
               {% verbatim %}
-                <h4 class="list-group-item-headings"><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a></h4>
+                <h4 class="list-group-item-headings"><i class="fa fa-{{ icon[note.type_note] }}"></i><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a></h4>
               {% endverbatim %}
               <p class="list-group-item-text">
                 <form role="form" class="form-inline" ng-show="note.showDetail">

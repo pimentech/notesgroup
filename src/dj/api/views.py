@@ -115,30 +115,30 @@ class Tree(BaseElementView):
 
 
         if request.user.is_superuser:
-            root_notes = ((0, 'Notesgroup', '/'),)
+            root_notes = ((0, 'Notesgroup', '/', 0),)
         else:
             employe = request.user.get_profile()
             curs.execute(
-                "SELECT note.uid,note.nom,note.path FROM droits,note WHERE"
+                "SELECT note.uid,note.nom,note.path,note.ref_type_note FROM droits,note WHERE"
                 " droits.ref_employe=%s AND droits.ref_note=note.uid"
                 " AND note.statut=0 ORDER BY note.path", (employe.pk,))
             root_notes = curs.fetchall()
         paths = []
         node_dict = {}
         tree = []
-        for uid,nom,path in root_notes:
+        for uid, nom, path, type_note in root_notes:
             if not paths or not path.startswith(paths[-1]):
                 paths.append(path)
-                node = {'uid':uid, 'nom':nom}
+                node = {'uid':uid, 'nom':nom, 'type_note':type_note}
                 node_dict[uid] = node
                 tree.append(node)
         for path in paths:
             curs.execute(
-                "SELECT uid,ref_object,nom FROM note WHERE path like %s"
+                "SELECT uid,ref_object,nom,ref_type_note FROM note WHERE path like %s"
                 " AND ref_type_note in (1,2,3) AND ref_etat_note not in (3,4)"
                 " AND uid!=0 AND nom is not null ORDER BY path", (path+'%',))
-            for uid, parent_uid, nom in curs.fetchall():
-                node = {'uid':uid,'nom':nom}
+            for uid, parent_uid, nom, type_note in curs.fetchall():
+                node = {'uid':uid,'nom':nom, 'type_note':type_note}
                 if parent_uid in node_dict:
                     parent = node_dict[parent_uid]
                     if 'children' in parent:

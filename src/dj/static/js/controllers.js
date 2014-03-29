@@ -157,12 +157,25 @@ app.controller('NoteCtrl', function NoteCtrl(
         $scope.load();
     };
 
+    $scope.icon = {
+        1:'home',
+        2:'folder',
+        3:'folder',
+        4:'comment-o',
+        5: 'phone',
+        6: 'bug',
+        7: 'question',
+        0: 'comment',
+        8: 'message'
+    };
+
     $scope.load = function(event) {
         //$scope.query_params = $scope.serialize($scope.queryParams);
         ModelUtils.load("note", $scope.queryParams).then(function(res) {
             top.notes = res;
             angular.forEach(res, function(obj) {
                 obj.showDetail = false;
+
             });
         });
     };
@@ -177,7 +190,7 @@ app.controller('NoteCtrl', function NoteCtrl(
     };
 
     $scope.toggleDetail = function(note) {
-        if (note.showDetail) note.showDetail = false; else note.showDetail = true;
+        note.showDetail = !note.showDetail;
         if (note.showDetail) {
             ModelUtils.get("note", note.uid).then(function(res) {
                 angular.extend(note, res);

@@ -1,6 +1,6 @@
 (function ( angular ) {
     'use strict';
-
+    
     angular.module( 'treeControl', [] )
         .directive( 'treecontrol', ['$compile', function( $compile ) {
             /**
@@ -17,12 +17,12 @@
                 else
                     return "";
             }
-
+            
             function ensureDefault(obj, prop, value) {
                 if (!obj.hasOwnProperty(prop))
                     obj[prop] = value;
             }
-
+            
             return {
                 restrict: 'EA',
                 require: "treecontrol",
@@ -56,6 +56,7 @@
                     });
 
                     $scope.expandedNodes = {};
+                    $scope.parentScopeOfTree = $scope.$parent;
 
                     $scope.headClass = function(node) {
                         var liSelectionClass = classIfDefined($scope.options.injectClasses.liSelected, false);
@@ -63,7 +64,7 @@
                         if (liSelectionClass && (this.$id == $scope.selectedScope))
                             injectSelectionClass = " " + liSelectionClass;
                         if (!node[$scope.options.nodeChildren] || node[$scope.options.nodeChildren].length === 0)
-                            return "tree-leaf" + injectSelectionClass;
+                            return "tree-leaf" + injectSelectionClass
                         if ($scope.expandedNodes[this.$id])
                             return "tree-expanded" + injectSelectionClass;
                         else
@@ -120,7 +121,7 @@
 
                     return {
                         template: $compile(template)
-                    };
+                    }
                 },
                 compile: function(element, attrs, childTranscludeFn) {
                     return function ( scope, element, attrs, treemodelCntr ) {
@@ -147,7 +148,7 @@
                         // we can fix this to work with the link transclude function with angular 1.2.6. as for angular 1.2.0 we need
                         // to keep using the compile function
                         scope.$treeTransclude = childTranscludeFn;
-                    };
+                    }
                 }
             };
         }])
@@ -161,7 +162,7 @@
                         element.html('').append(clone);
                     });
                 }
-            };
+            }
         })
         .directive("treeTransclude", function() {
             return {
@@ -176,11 +177,18 @@
                         scope.selectNodeLabel(scope.node);
                     }
 
-                    scope.$treeTransclude(scope, function(clone) {
+                    // create a scope for the transclusion, whos parent is the parent of the tree control
+                    scope.transcludeScope = scope.parentScopeOfTree.$new();
+                    scope.transcludeScope.node = scope.node;
+                    scope.$on('$destroy', function() {
+                        scope.transcludeScope.$destroy();
+                    });
+
+                    scope.$treeTransclude(scope.transcludeScope, function(clone) {
                         element.empty();
                         element.append(clone);
                     });
                 }
-            };
+            }
         });
 })( angular );
