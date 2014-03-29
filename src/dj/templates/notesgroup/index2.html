@@ -27,39 +27,34 @@
     <script src="{{ http_static }}/js/controllers.js"></script>
   </head>
   <body ng-app="myApp"
-        ng-controller="TopCtrl"
+        ng-controller="NoteCtrl"
         ng-init="initialize()">
     <div class="row">
       <div class="col-md-2">.col-md-4</div>
-      <div class="col-md-10" ng-controller="NoteCtrl">
+      <div class="col-md-10">
         <form class="form-inline" role="form">
-
           <label>
-            {% trans "State" %} {{ form.etat_note }}
+            {% trans "State" %}
+            {{ form.etat_note }}
           </label>
-
           <label>
             {% trans "Scope" %}
             {{ form.path }}
             <span id="html_chemin_txt"></span>
           </label>
-
           <label>
             {% trans "From" %}
             <select ng-model="queryParams.demandeur" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
           </label>
-
           <label>
             {% trans "To" %}
             <select ng-model="queryParams.responsable" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
           </label>
-
           <label>
             <b>{% trans "Actor" %}</b>&nbsp;
             <select ng-model="queryParams.timer_actor" ng-options="e.uid as e.title group by e.societe for e in emp_l"></select>
             <input type="text" ng-model="queryParams.timer_date" />
           </label>
-
           <label>
             <b>{{ form.sel_txt }}</b>
           </label>
@@ -83,7 +78,7 @@
       </div>
     </div>
     {% verbatim %}
-      <div class="row" ng-controller="NoteCtrl" ng-init="initialize()">
+      <div class="row">
         <div class="col-md-2">
           <treecontrol tree-model="top.tree"
                        options="treeOptions"
@@ -105,6 +100,5 @@
         </div>
       </div>
     {% endverbatim %}
-
   </body>
 </html>

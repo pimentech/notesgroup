@@ -153,7 +153,7 @@ app.controller('NoteCtrl', function NoteCtrl(
 
     $scope.load = function(event) {
         //$scope.query_params = $scope.serialize($scope.queryParams);
-        ModelUtils.load("note",$scope.queryParams).then(function(res) {
+        ModelUtils.load("note", $scope.queryParams).then(function(res) {
             top.notes = res;
         });
     };
