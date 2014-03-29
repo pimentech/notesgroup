@@ -180,6 +180,42 @@ app.controller('NoteCtrl', function NoteCtrl(
         });
     };
 
+
+    $scope.save = function(note) {
+        note.errors = {};
+        ModelUtils.save($scope.name, '', note, note.errors);
+    };
+
+
+
+    $scope.goTodo = function() {
+        $scope.queryParams.demandeur = 0;
+        $scope.queryParams.responsable = $scope.userid;
+        $scope.queryParams.timer_actor = 0;
+        $scope.load();
+    };
+
+    $scope.goAsked = function() {
+        $scope.queryParams.demandeur = $scope.userid;
+        $scope.queryParams.responsable = 0;
+        $scope.queryParams.timer_actor = 0;
+        $scope.load();
+    };
+
+    $scope.goTouched = function() {
+        $scope.queryParams.chemin = '';
+        $scope.queryParams.date_start = '';
+        $scope.queryParams.date_end = '';
+        $("#label_path").hide();
+        $scope.queryParams.path = 'partout';
+        $scope.queryParams.etat_note = 0;
+        $scope.queryParams.demandeur = 0;
+        $scope.queryParams.responsable = 0;
+        $scope.queryParams.timer_actor = $scope.userid;
+        $scope.load();
+    };
+
+
     $scope.showSelected = function(node_tree) {
         $scope.queryParams.chemin = node_tree.uid;
         $scope.queryParams.path = 'ici';

@@ -29,7 +29,16 @@
   <body ng-app="myApp" ng-controller="TopCtrl" ng-init="initialize()">
     <div class="container" ng-controller="NoteCtrl" ng-init="initialize()">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-2">
+          <a href="" ng-click="goTodo()">
+            <i class="fa fa-check-circle-o fa-4x" title="{% trans "What I have to do." %}"></i>
+          </a>
+          <a href="" ng-click="goAsked()">
+            <i class="fa fa-question fa-4x" title="{% trans "What I have asked (From:me, state:open)" %}"></i>
+          </a>
+        </div>
+        <div class="col-md-10">
+
           <form class="form-inline" role="form">
             <label>
               {% trans "State" %}
@@ -90,7 +99,7 @@
           <div class="list-group">
             <div ng-repeat="note in top.notes" class="list-group-item">
               {% verbatim %}
-                <h4 class="list-group-item-headings"><i class="fa fa-{{ icon[note.type_note] }}"></i><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a></h4>
+                <h4 class="list-group-item-headings"><i class="fa fa-{{ icon[note.type_note] }}"></i><a href="" ng-click="toggleDetail(note)">{{ note.nom }}</a><small>{{ note.resume }}</small></h4>
               {% endverbatim %}
               <p class="list-group-item-text">
                 <form role="form" class="form-inline" ng-show="note.showDetail">
@@ -126,7 +135,9 @@
                   </div>
                   <div class="form-group">
                     <label>{% trans "Summary" %}</label>
-                    <input type="text" class="form-control" ng-model="note.resume" />
+                    <div class="col-xs-4">
+                      <input type="text" class="form-control" ng-model="note.resume" />
+                    </div>
                   </div>
                   <div class="form-group">
                     <label>{% trans "From" %}</label>
@@ -137,6 +148,8 @@
                     <select class="form-control" ng-model="note.responsable_employe" ng-options="e as emp_d[e].title for e in note.actors"></select>
                   </div>
                   <div ng-show="note.showDetail" text-angular ng-model="note.description"></div>
+
+                  <input class="btn btn-primary" type="submit" ng-click="save(note)" />
                 </form>
               </p>
             </div>
