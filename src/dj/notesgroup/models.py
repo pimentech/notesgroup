@@ -497,7 +497,7 @@ class Note(Model):
         elif type_note == 0: # indefini
             cl = 'comment'
         elif type_note == 8: # message
-            cl = 'message'
+            cl = 'info'
         return cl
 
 

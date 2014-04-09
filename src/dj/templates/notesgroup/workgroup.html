@@ -24,7 +24,7 @@
     {% if not e.user.is_active %}
     ({% trans "inactive" %})
     {% else %}
-        <i uid="{{ e.uid }}" class="group-user fa fa-user" alt="add user somewhere in the tree"></i>
+        <i uid="{{ e.uid }}" class="dropaccept group-user fa fa-user" alt="add user somewhere in the tree"></i>
     {% endif %}
     <div id="edit_{{ e.uid }}"></div>
   </li>
@@ -32,5 +32,5 @@
 </ul>
 {% endfor %}
 <script type="text/javascript">
-  $("#nglist").find("img.group-user").draggable({revert: true, fx: 300, ghosting: true, opacity: 0.4});
+  $("#nglist").find("i.group-user").draggable({revert: true, fx: 300, ghosting: true, opacity: 0.4});
 </script>

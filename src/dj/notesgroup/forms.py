@@ -52,7 +52,6 @@ class TimerForm(NGModelForm):
                                        (4.0, "4:00"), (4.5, "4:30"),
                                        (5.0, "5:00"), (5.5, "5:30"),
                                        (6.0, "6:00"), (6.5, "6:30"),
-                                       (6.0, "6:00"), (6.5, "6:30"),
                                        (7.0, "7:00"), (7.5, "7:30")),
                               attrs={
                                   'onChange': "updateTimer(this, '%s')"
@@ -230,9 +229,10 @@ class SearchForm(Form):
         ("ref_type_note", _("Type")),
         ("ref_demandeur_employe", _("From")),
         ("ref_responsable_employe", _("To")),
-        ("chemin", _("Path")))))
+        ("chemin", _("Path")),
+        ("priorite", _("Priority")))))
     sort_order = CharField(
-        required=True, initial='-',
+        required=False, initial='-',
         widget=RadioSelect(choices=(
             ('-', mark_safe(u'<li class="fa fa-arrow-down"></li>')),
             ('', mark_safe(u'<li class="fa fa-arrow-up"></li>')))))

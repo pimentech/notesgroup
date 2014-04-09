@@ -29,7 +29,7 @@ msgstr "en attente"
 msgid "resolved"
 msgstr "résolu"
 
-msgid "canceled"
+msgid "cancelled"
 msgstr "annulé"
 
 msgid "department"
