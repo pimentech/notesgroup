@@ -38,7 +38,7 @@ NGBASEURL=http://www.pimentech.fr/pimentech/notesgroup
 
 DBNAME=notesgroup2
 DBTYPE=pg
-DBHOST=chili
+DBHOST=paprika
 DBUSER=notesgroup
 DBPWD=pwnotesgroup75
 DBPORT=5432

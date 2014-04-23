@@ -7,17 +7,12 @@ VIRTUAL_HOST = os.environ.get('VIRTUAL_HOST')
 HOSTNAME = socket.gethostname()
 
 
-if socket.gethostbyname("safran.pimentech.net") == '192.168.1.2':
-    DBHOST = "chili"
-else:
-    DBHOST = "localhost"
-
 
 DATABASES = {
     'default': {
         'ENGINE' : 'django.db.backends.postgresql_psycopg2',
         'NAME' : globals.DBNAME,
-        'HOST' : DBHOST,
+        'HOST' : globals.DBHOST,
         'PASSWORD' : globals.DBPWD,
         'PORT' : globals.DBPORT,
         'USER' : globals.DBUSER
