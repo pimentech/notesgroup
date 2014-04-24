@@ -12,8 +12,10 @@
              ></li>
       </td>
       <td colspan="4" style="font-weight:bold;background:#dee7ec;" >
+        <a href="?note_src=note.uid">#{{ note.uid }}</a>
 		{{ note.nom }}
 		<span>
+
           {% if note.etat_note_id %}({{ note.get_etat_note }}){% endif %}
           {% if note.priorite %}
               {% trans "Priority" %}: {{ note.priorite }}
