@@ -49,11 +49,17 @@ function showNotes() {
 }
 
 
-function doneMessage() {
-	$('#message').html("Modifications effectuées");
+function showMessage(text) {
+	$('#message').html(text);
 	$('#message').fadeIn();
 	$('#message').fadeOut(2000);
 }
+
+function doneMessage() {
+    showMessage("Modifications effectuées");
+}
+
+
 
 function errorMessage() {
 	$('#message').html("Erreur !");
@@ -427,6 +433,23 @@ function goAnchor(id) {
 	var target_top = target_offset.top;
 	$('#ngcontent').animate({scrollTop:target_top}, 500);
 }
+
+function copyToClipboard(text) {
+   // Spawn an invisible text box (far outside the document),
+   // put the text in and select it so that the user can copy
+   // it with the platform specific key combination.
+
+   $('<input type="text" class="hidden-copy-input">').appendTo('body')
+     .css({ position: 'fixed', top: -1000000, left: -1000000 })
+     .val(text)
+     // Remove from DOM on unfocus
+     .focusout(function() { $(this).remove(); })
+     .select();
+    showMessage('<i class="fa fa-copy"></i> Ctrl-C pour copier');
+    return false;
+}
+
+
 
 jQuery(function($){
 	$.datepicker.regional['fr'] = {
