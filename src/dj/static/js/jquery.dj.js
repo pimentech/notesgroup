@@ -439,7 +439,7 @@ function copyToClipboard(text) {
    // put the text in and select it so that the user can copy
    // it with the platform specific key combination.
 
-   text = text.replace(':', '-').replace(/\s*:\s*/g, '/').replace(/ /g, '_');
+   text = text.replace('\s*:\s*', '-').replace(/\s*:\s*/g, '/').replace(/ /g, '_');
    $('<input type="text" class="hidden-copy-input">').appendTo('body')
      .css({ position: 'fixed', top: -1000000, left: -1000000 })
      .val(text)
