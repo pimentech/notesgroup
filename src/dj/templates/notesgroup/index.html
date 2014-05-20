@@ -85,7 +85,7 @@
                             <b>{% trans "From" %}</b>&nbsp;<select id="id_demandeur" name="demandeur">
                                 <option value="0"></option>
                                 {% for societe in employe.workgroup_by_societe %}
-                                    <option disabled>{{ societe.societe.nom }}</option>
+                                    <option style="color: red" value="{{ societe.societe.uid }}">{{ societe.societe.nom }}</option>
                                     {% for e in societe.employes %}
                                         <option value="{{ e.uid }}">{{ e }}</option>
                                     {% endfor %}

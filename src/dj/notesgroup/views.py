@@ -203,8 +203,19 @@ class NoteListView(ActiveMemberRequiredView):
                 else:
                     self.notes = self.notes.filter(etat_note=c['etat_note'])
             if c['demandeur']:
-                self.notes = self.notes.filter(
-                    demandeur_employe=c['demandeur'])
+                is_societe = Societe.objects.filter(uid=c['demandeur']).count() != 0
+                if is_societe:
+                    employe = self.authenticated_user.get_profile()
+                    for workgroup in employe.workgroup_by_societe():
+                        if workgroup['societe'].uid == c['demandeur']:
+                            employes_workgroup = []
+                            for employe in workgroup['employes']:
+                                employes_workgroup.append(employe.uid)
+                            self.notes = self.notes.filter(demandeur_employe__in=employes_workgroup)
+                            break
+                else:
+                    self.notes = self.notes.filter(
+                        demandeur_employe=c['demandeur'])
             if c['responsable']:
                 is_societe = Societe.objects.filter(uid=c['responsable']).count() != 0
                 if is_societe:
