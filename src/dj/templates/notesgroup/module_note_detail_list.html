@@ -13,7 +13,7 @@
       </td>
       <td colspan="4" style="font-weight:bold;background:#dee7ec;" >
         {% ifnotequal action "new" %}
-          <a href="?note_src={{ note.uid }}" onclick='copyToClipboard("{{ note.uid }}-{{ note.nom }}")'>#{{ note.uid }}</a>
+          <a href="?note_src={{ note.uid }}" onclick="copyToClipboard('{{ note.uid }}-{{ note.nom|escapejs }}')">#{{ note.uid }}</a>
         {% endifnotequal %}
 		{{ note.nom }}
 		<span>
