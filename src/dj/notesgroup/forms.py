@@ -199,6 +199,7 @@ class SearchForm(Form):
     etat_note = IntegerField(required=False,
                              widget=Select(choices=(
                                  (-1, _("open or undefined")),
+                                 (-2, _("open or resolved")),
                                  (1, _("open")),
                                  (2, _("pending")),
                                  (3, _("resolved")),

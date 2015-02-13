@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-08 13:45+0100\n"
+"POT-Creation-Date: 2015-02-13 14:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,102 +17,113 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: notesgroup/forms.py:144
+#: notesgroup/forms.py:138
 msgid "Confirm Email"
 msgstr "Confirmation"
 
-#: notesgroup/forms.py:156
+#: notesgroup/forms.py:150
 msgid "The two email fields did not match"
 msgstr "Les deux champs d'email ne correspondent pas"
 
-#: notesgroup/forms.py:162
+#: notesgroup/forms.py:156
 msgid "Password"
 msgstr "Mot de passe"
 
-#: notesgroup/forms.py:163
+#: notesgroup/forms.py:157
 msgid ""
 "Retenez bien le mot de passe ; apres enregistrement, celui-ci est crypte "
 "(sha)."
 msgstr ""
 
-#: notesgroup/forms.py:206
+#: notesgroup/forms.py:201
 msgid "open or undefined"
 msgstr "ouvert ou indéfini"
 
-#: notesgroup/forms.py:207
+#: notesgroup/forms.py:202
+msgid "open or resolved"
+msgstr "ouvert ou résolu"
+
+#: notesgroup/forms.py:203
 msgid "open"
 msgstr "ouvert"
 
-#: notesgroup/forms.py:208
+#: notesgroup/forms.py:204
 msgid "pending"
 msgstr "en attente"
 
-#: notesgroup/forms.py:209
+#: notesgroup/forms.py:205
 msgid "resolved"
 msgstr "résolu"
 
-#: notesgroup/forms.py:210
+#: notesgroup/forms.py:206
 msgid "All"
 msgstr "Tous"
 
-#: notesgroup/forms.py:213
+#: notesgroup/forms.py:209
 msgid "everywhere"
 msgstr "partout"
 
-#: notesgroup/forms.py:214
+#: notesgroup/forms.py:210
 msgid "subnotes of"
 msgstr "sous notes de"
 
-#: notesgroup/forms.py:226 templates/notesgroup/note_edit.html:34
+#: notesgroup/forms.py:221 templates/notesgroup/note_edit.html:34
 msgid "Summary"
 msgstr "Résumé"
 
-#: notesgroup/forms.py:227 notesgroup/forms.py:233
+#: notesgroup/forms.py:222 notesgroup/forms.py:228
 #: templates/notesgroup/note_edit.html:20
 msgid "Name"
 msgstr "Nom"
 
-#: notesgroup/forms.py:228 templates/notesgroup/note_edit.html:82
+#: notesgroup/forms.py:223 templates/notesgroup/note_edit.html:82
 msgid "Description"
 msgstr "Description"
 
-#: notesgroup/forms.py:231
+#: notesgroup/forms.py:226
 msgid "Modification"
 msgstr "Modification"
 
-#: notesgroup/forms.py:232
+#: notesgroup/forms.py:227
 msgid "Age"
 msgstr "Âge"
 
-#: notesgroup/forms.py:234 templates/notesgroup/index.html:77
+#: notesgroup/forms.py:229 templates/notesgroup/index.html:74
 #: templates/notesgroup/note_add_comment.html:19
 #: templates/notesgroup/note_edit.html:24
 #: templates/notesgroup/note_view.html:21
 msgid "State"
 msgstr "État"
 
-#: notesgroup/forms.py:235 templates/notesgroup/note_edit.html:22
+#: notesgroup/forms.py:230 templates/notesgroup/note_edit.html:22
 #: templates/notesgroup/note_view.html:17
 msgid "Type"
 msgstr "Type"
 
-#: notesgroup/forms.py:236 templates/notesgroup/index.html:88
+#: notesgroup/forms.py:231 templates/notesgroup/index.html:85
 #: templates/notesgroup/note_edit.html:44
 #: templates/notesgroup/note_list.html:20
 #: templates/notesgroup/note_view.html:9
 msgid "From"
 msgstr "Demandeur"
 
-#: notesgroup/forms.py:237 templates/notesgroup/index.html:100
+#: notesgroup/forms.py:232 templates/notesgroup/index.html:97
 #: templates/notesgroup/note_edit.html:49
 #: templates/notesgroup/note_list.html:24
 #: templates/notesgroup/note_view.html:13
 msgid "To"
 msgstr "Destinataire"
 
-#: notesgroup/forms.py:238
+#: notesgroup/forms.py:233
 msgid "Path"
 msgstr "Chemin"
+
+#: notesgroup/forms.py:234
+#: templates/notesgroup/module_note_detail_list.html:23
+#: templates/notesgroup/note_edit.html:61
+#: templates/notesgroup/note_view.html:30
+msgid "Priority"
+msgstr "Priorité"
 
 #: templates/500.html:4 templates/registration/password_change_done.html:5
 #: templates/registration/password_change_form.html:6
@@ -148,51 +159,49 @@ msgstr ""
 msgid "Save"
 msgstr "Enregistrer"
 
-#: templates/notesgroup/index.html:60
+#: templates/notesgroup/index.html:52 templates/notesgroup/index.html:180
 msgid "What I have to do."
 msgstr "Ce que j'ai à faire."
 
-#: templates/notesgroup/index.html:61
+#: templates/notesgroup/index.html:55 templates/notesgroup/index.html:186
 msgid "What I have asked (From:me, state:open)"
 msgstr "Ce que j'ai demandé (Demandeur:moi, etat:ouvert)."
 
-#: templates/notesgroup/index.html:82
+#: templates/notesgroup/index.html:58
+msgid "Workgroup"
+msgstr ""
+
+#: templates/notesgroup/index.html:79
 msgid "Scope"
 msgstr "étendue"
 
-#: templates/notesgroup/index.html:112
+#: templates/notesgroup/index.html:109
 msgid "Actor"
 msgstr "Acteur"
 
-#: templates/notesgroup/index.html:134
+#: templates/notesgroup/index.html:131
 msgid "contains"
 msgstr "contient"
 
-#: templates/notesgroup/index.html:140
+#: templates/notesgroup/index.html:137
 msgid "Modified between"
 msgstr "Modifié entre le"
 
-#: templates/notesgroup/index.html:141
+#: templates/notesgroup/index.html:138
 msgid "and"
 msgstr "et le"
 
-#: templates/notesgroup/index.html:145
+#: templates/notesgroup/index.html:142
 msgid "Sort by"
 msgstr "Trier par"
 
-#: templates/notesgroup/index.html:153
+#: templates/notesgroup/index.html:150
 msgid "Search"
 msgstr "Chercher"
 
 #: templates/notesgroup/module_note_detail_list.html:10
 msgid "Move note"
 msgstr "Déplacer la note"
-
-#: templates/notesgroup/module_note_detail_list.html:19
-#: templates/notesgroup/note_edit.html:61
-#: templates/notesgroup/note_view.html:30
-msgid "Priority"
-msgstr "Priorité"
 
 #: templates/notesgroup/note_add_comment.html:7
 #: templates/notesgroup/note_edit.html:9
@@ -259,9 +268,8 @@ msgid "previous notes"
 msgstr "notes précédentes"
 
 #: templates/notesgroup/note_list.html:41
-#, fuzzy
 msgid "results"
-msgstr "Pas de résultat"
+msgstr "résultats"
 
 #: templates/notesgroup/note_list.html:42
 msgid "page"
@@ -297,9 +305,8 @@ msgstr "inactif"
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_form.html:5
-#, fuzzy
 msgid "Documentation"
-msgstr "Durée"
+msgstr "Documentation"
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_form.html:5
@@ -340,14 +347,12 @@ msgid ""
 msgstr ""
 
 #: templates/registration/password_change_form.html:28
-#, fuzzy
 msgid "Old password"
-msgstr "Mot de passe"
+msgstr "Ancien mot de passe"
 
 #: templates/registration/password_change_form.html:33
-#, fuzzy
 msgid "New password"
-msgstr "Mot de passe"
+msgstr "Nouveau mot de passe"
 
 #: templates/registration/password_change_form.html:38
 #, fuzzy

@@ -200,6 +200,8 @@ class NoteListView(ActiveMemberRequiredView):
             if c['etat_note']:
                 if c['etat_note'] == -1:
                     self.notes = self.notes.filter(etat_note__in=(1, 0))
+                elif c['etat_note'] == -2:
+                    self.notes = self.notes.filter(etat_note__in=(1, 3))
                 else:
                     self.notes = self.notes.filter(etat_note=c['etat_note'])
             if c['demandeur']:
