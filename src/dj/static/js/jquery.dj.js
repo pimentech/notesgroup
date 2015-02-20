@@ -352,9 +352,9 @@ function newNote(parent_uid) {
 function updateTimerDay() {
     $.get('/get_timer_day/', function(response) {
         var completed = 100/7.0*parseFloat(response) || 0;
-        $( "#progress_bar" ).progressbar({
-            value: completed
-        });
+        $("#progress_bar")
+            .progressbar({ value: completed })
+            .title(response + " h");
     });
 }
 
