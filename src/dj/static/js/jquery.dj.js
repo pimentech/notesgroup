@@ -354,7 +354,7 @@ function updateTimerDay() {
         var completed = 100/7.0*parseFloat(response) || 0;
         $("#progress_bar")
             .progressbar({ value: completed })
-            .title(response + " h");
+            .attr("title", response + " h");
     });
 }
 
