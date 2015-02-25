@@ -14,19 +14,21 @@ def send_mail(sender, recipients, subject, body):
     Tous les envois de mail doivent passer par cette methode
     > Pour l'instant non !!! (grep send_mail views.py)
     """
-    if recipients:
-        if sender:
-            reply_to = user_email(sender)
-        else:
-            reply_to = MAILADMIN
-        recipients = [ user_email(u) for u in recipients ]
-        msg = EmailMultiAlternatives(u'[NotesGroup] ' + subject,
-                                     'notification notesgroup', 
-                                     MAILADMIN, 
-                                     recipients,
-                                     headers = {'Reply-To': reply_to})
-        msg.attach_alternative(body, "text/html")
-        msg.send()
+    if not recipients:
+        return
+    if sender:
+        reply_to = user_email(sender)
+        from_email = u'"%s %s" <%s>' % (sender.first_name, sender.last_name, MAILADMIN)
+    else:
+        from_email = reply_to = MAILADMIN
+    recipients = [ user_email(u) for u in recipients ]
+    msg = EmailMultiAlternatives(u'[NotesGroup] ' + subject,
+                                 'notification notesgroup', 
+                                 from_email, 
+                                 recipients,
+                                 headers = {'Reply-To': reply_to})
+    msg.attach_alternative(body, "text/html")
+    msg.send()
 
 
 def note_diff(note1, note2):
