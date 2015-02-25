@@ -16,14 +16,15 @@ def send_mail(sender, recipients, subject, body):
     """
     if recipients:
         if sender:
-            sender = user_email(sender)
+            reply_to = user_email(sender)
         else:
-            sender = MAILADMIN
+            reply_to = MAILADMIN
         recipients = [ user_email(u) for u in recipients ]
-        msg = EmailMultiAlternatives(u'[NotesGroup] ' + subject, 
+        msg = EmailMultiAlternatives(u'[NotesGroup] ' + subject,
                                      'notification notesgroup', 
-                                     sender, 
-                                     recipients)
+                                     MAILADMIN, 
+                                     recipients,
+                                     headers = {'Reply-To': reply_to})
         msg.attach_alternative(body, "text/html")
         msg.send()
 
