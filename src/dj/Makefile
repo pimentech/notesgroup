@@ -34,6 +34,7 @@ install-templates:
 install-apacheconf: ${APACHECONFDIR}
 	@echo "installing apacheconf"
 	@rsync -ar --delete --cvs-exclude apache/ ${APACHECONFDIR}/
+	@touch ${APACHECONFDIR}/wsgi.py
 
 
 ${APACHECONFDIR}:
@@ -44,6 +45,10 @@ ${APACHECONFDIR}:
 install: all install-python install-locale.ok install-templates install-static install-apacheconf
 #	@cd ../shell && make install
 	@echo "done"
+
+ui:
+	git pull && make install
+
 
 syncdb:
 	@python manage.py syncdb
