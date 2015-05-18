@@ -284,7 +284,7 @@ function launchWysiwyg(target) {
             language : 'fr', theme : "advanced",
             content_css : http_static+'/css/tinymce.css',
 			theme_advanced_toolbar_location : "top", theme_advanced_toolbar_align : "left",
-            theme_advanced_buttons1 : "mybutton,fontsizeselect,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
+            theme_advanced_buttons1 : "mybutton,paste,pastetext,pasteword,formatselect,fontsizeselect,removeformat,outdent,indent,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink,code",
             theme_advanced_buttons2 : "", theme_advanced_buttons3 : "",
             paste_auto_cleanup_on_paste : true, paste_remove_styles: true, paste_remove_styles_if_webkit: true, paste_strip_class_attributes: true,
             plugins : "paste",
