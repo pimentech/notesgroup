@@ -427,9 +427,13 @@ class NoteEditView(EditView):
                 timer = Timer(note=instance)
             self.timer_form = forms.TimerForm(instance=timer)
 
-        self.form = self.FormClass(context=self.note, data=data,
-                                   instance=instance,
-                                   prefix=str(self.note.uid))
+        self.form = self.FormClass(
+            context=self.note,
+            data=data,
+            instance=instance,
+            prefix=str(self.note.uid),
+            is_superuser=self.authenticated_user.is_superuser
+        )
         if data:
             is_valid = True
             if self.attachment_formset:

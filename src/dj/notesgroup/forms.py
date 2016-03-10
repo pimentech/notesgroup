@@ -70,15 +70,13 @@ class NoteAddCommentForm(NGModelForm):
         widget=Textarea(attrs={'class': 'wysiwyg',
                                'style': "height:15;width:95%;"}),
         required=False)
-    etat_note = ModelChoiceField(
-        queryset=EtatNote.objects.all().order_by('uid'), empty_label=None)
 
     class Meta:
         model = Note
         fields = ['etat_note', 'description', 'demandeur_employe',
                   'responsable_employe']
 
-    def __init__(self, context, data, prefix, instance):
+    def __init__(self, context, data, prefix, instance, is_superuser=None):
         super(NoteAddCommentForm, self).__init__(
             data=data, prefix=prefix, instance=instance)
         queryset = Employe.objects.filter(
@@ -86,6 +84,11 @@ class NoteAddCommentForm(NGModelForm):
         self.fields['demandeur_employe'] = ModelChoiceField(
             queryset=queryset, empty_label=None)
         self.fields['responsable_employe'] = ModelChoiceField(
+            queryset=queryset, empty_label=None)
+        queryset = EtatNote.objects.exclude(uid=0).order_by('uid')
+        if not is_superuser:
+            queryset = queryset.exclude(nom='cancelled')
+        self.fields['etat_note'] = ModelChoiceField(
             queryset=queryset, empty_label=None)
 
 
