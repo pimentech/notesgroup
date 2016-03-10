@@ -203,7 +203,7 @@ class SearchForm(Form):
                                  (1, _("open")),
                                  (2, _("pending")),
                                  (3, _("resolved")),
-                                 (4, _("canceled")),
+                                 (4, _("cancelled")),
                                  (0, _("All")))))
     path = CharField(required=False,
                      widget=Select(choices=(
