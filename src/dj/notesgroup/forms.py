@@ -85,7 +85,7 @@ class NoteAddCommentForm(NGModelForm):
             queryset=queryset, empty_label=None)
         self.fields['responsable_employe'] = ModelChoiceField(
             queryset=queryset, empty_label=None)
-        queryset = EtatNote.objects.exclude(uid=0).order_by('uid')
+        queryset = EtatNote.objects.all().order_by('uid')
         if not is_superuser:
             queryset = queryset.exclude(nom='cancelled')
         self.fields['etat_note'] = ModelChoiceField(
