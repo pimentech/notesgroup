@@ -620,6 +620,8 @@ class Note(Model):
         new_note.save()
         for a in old_note.attachments():
             a.copy_to_note(new_note.pk)
+        for d in Droits.objects.filter(note_id=old_note.pk):
+            d.copy_to_note(new_note.pk)
         return new_note
 
 
@@ -691,6 +693,12 @@ class Droits(Model):
     employe = ForeignKey(Employe, db_column='ref_employe')
     note = ForeignKey(Note, db_column='ref_note')
     type_role = ForeignKey(TypeRole, db_column='ref_type_role')
+
+    def copy_to_note(self, note_id):
+        new_droit = self
+        new_droit.pk = None
+        new_droit.note_id = note_id
+        new_droit.save()
 
 
 class Timer(Model):
