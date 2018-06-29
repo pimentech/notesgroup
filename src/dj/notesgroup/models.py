@@ -611,6 +611,17 @@ class Note(Model):
     def del_user(self, user):
         Droits.objects.filter(note=self, employe=user).delete()
 
+    def clone(self):
+        old_note = Note.objects.get(uid=self.uid)
+        new_note = self
+        new_note.pk = None
+        new_note.montant = 0
+        new_note.etat_note_id = 1
+        new_note.save()
+        for a in old_note.attachments():
+            a.copy_to_note(new_note.pk)
+        return new_note
+
 
 class Action(Model):
 
@@ -750,6 +761,12 @@ class Attachment(Model):
 
     note = ForeignKey(Note, db_column='ref_note')
     source = FileField(upload_to='attachments', storage=fs)
+
+    def copy_to_note(self, note_id):
+        new_att = self
+        new_att.pk = None
+        new_att.note_id = note_id
+        new_att.save()
 
 
 classes = (

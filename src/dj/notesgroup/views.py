@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db import connection
 from django.db.models import Sum
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.template.defaultfilters import date
 
 from django_pimentech.viewsobjects import BaseView, on_method
@@ -341,6 +341,18 @@ class NoteDiffView(ActiveMemberRequiredView):
             object=self.note).order_by('-datemodif')[0]
         return note_diff(previous, self.note)
 
+class NoteCloneView(EditView):
+    template = 'notesgroup/module_note_detail_list.html'
+    def fill_context(self):
+        if not self.request.user.is_superuser:
+            return HttpResponseForbidden()
+
+        if self.note.type_note_id != 4:
+            return HttpResponseForbidden()
+
+        new_note = self.note.clone()
+        return HttpResponseRedirect(u'/%s/detail_list/' % new_note.uid)
+        
 
 class TimerEditView(ActiveMemberRequiredView):
     note = None

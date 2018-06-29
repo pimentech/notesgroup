@@ -3,6 +3,9 @@
   {% call "module_note_detail_list" note %}
 </span>
 <div style="text-align:right">
+  {% if user.is_superuser and note.type_note_id == 4 and note.etat_note_id == 3 %}
+  <a class="button" target="detail_list_container_{{ note }}" href="/{{ note }}/clone/">{% trans "Reopen" %}</a>
+  {% endif %}
   <a class="button" target="_blank" href="/{{ note }}/detail_new_window/">{% trans "Print" %}</a>
   <a class="button" target="detail_list_container_{{ note }}" href="/{{ note }}/edit/">{% trans "Modify" %}</a>
   <a class="button" target="detail_note_comment_{{ note }}" href="/{{ note }}/add_comment/">{% trans "Comment" %}</a>

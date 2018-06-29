@@ -35,6 +35,7 @@ urlpatterns = patterns(
     url(r'^(?P<note>\d+)/users/$', ObjectCaller(views.NoteUsersView)),
     url(r'^(?P<note>\d+)/move_to/(?P<new_parent>\d+)/$',
         ObjectCaller(views.NoteMoveView)),
+    url(r'^(?P<note>\d+)/clone/', ObjectCaller(views.NoteCloneView)),
 
     url(r'^(?P<note>\d+)/timer/(?P<timer>\d+)/',
         ObjectCaller(views.TimerEditView)),
