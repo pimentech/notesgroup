@@ -39,7 +39,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
 active_member_required = login_required = user_passes_test(
-    lambda u: u.is_active, login_url='accounts/login/')
+    lambda u: u.is_active, login_url='/accounts/login/')
 register = template.Library()
 
 
