@@ -12,7 +12,7 @@ from django.template.defaultfilters import date
 
 from django_pimentech.viewsobjects import BaseView, on_method
 
-from models import Note, Action, Employe, Societe, Timer
+from models import Note, Action, Employe, Societe, Timer, Attachment
 from utils import note_diff, send_mail
 
 from datetime import datetime
@@ -633,3 +633,24 @@ class FooView(ActiveMemberRequiredView):
     def fill_context(self):
         self.note = Note.objects.get(note=self.note)
         self['toto'] = 'popo'
+
+
+class ServerAttachment(ActiveMemberRequiredView):
+    def fill_context(self):
+        source = 'attachments/' + self.path
+
+        try:
+            att = Attachment.objects.get(source=source, statut=0)
+        except:
+            raise HttpResponseForbidden()
+
+        if not self.employe.can_view(att.note):
+            raise HttpResponseForbidden()
+
+        full_path = '%s/%s' % (settings.FS_STORAGE_PATH, source)
+
+        response = HttpResponse(content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename="%s"' % self.path
+        response.write(open(full_path, 'rb').read())
+        return response
+

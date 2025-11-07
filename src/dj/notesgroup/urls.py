@@ -36,6 +36,7 @@ urlpatterns = patterns(
     url(r'^(?P<note>\d+)/move_to/(?P<new_parent>\d+)/$',
         ObjectCaller(views.NoteMoveView)),
     url(r'^(?P<note>\d+)/clone/', ObjectCaller(views.NoteCloneView)),
+    url('^attachments/(?P<path>.*)/$', ObjectCaller(views.ServerAttachment), url='serve_attachements'),
 
     url(r'^(?P<note>\d+)/timer/(?P<timer>\d+)/',
         ObjectCaller(views.TimerEditView)),

@@ -95,7 +95,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 LOGIN_REDIRECT_URL = '/'
 
 
-if DEVELOPMENT_ENVIRON:
+if DEVELOPMENT_ENVIRON and False:
     # https://github.com/dcramer/django-devserver
     # pip install git+git://github.com/dcramer/django-devserver#egg=django-devserver
     INSTALLED_APPS += 'devserver',
