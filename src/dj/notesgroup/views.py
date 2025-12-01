@@ -642,10 +642,10 @@ class ServerAttachment(ActiveMemberRequiredView):
         try:
             att = Attachment.objects.get(source=source, statut=0)
         except:
-            raise HttpResponseForbidden()
+            return HttpResponseForbidden()
 
         if not self.employe.can_view(att.note):
-            raise HttpResponseForbidden()
+            return HttpResponseForbidden()
 
         full_path = '%s/%s' % (settings.FS_STORAGE_PATH, source)
 
