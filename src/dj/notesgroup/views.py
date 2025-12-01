@@ -640,11 +640,17 @@ class ServerAttachment(ActiveMemberRequiredView):
         source = 'attachments/' + self.path
 
         try:
-            att = Attachment.objects.get(source=source, statut=0)
+            all_att = Attachment.objects.filter(source=source, statut=0)
         except:
             return HttpResponseForbidden()
 
-        if not self.employe.can_view(att.note):
+        forbidden = True
+        for att in all_att:
+            if self.employe.can_view(att.note):
+                forbidden = False
+                break
+
+        if forbidden:
             return HttpResponseForbidden()
 
         full_path = '%s/%s' % (settings.FS_STORAGE_PATH, source)
